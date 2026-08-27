@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { headers } from "next/headers";
 
 export default async function ReclamarPage({
   searchParams,
@@ -23,6 +24,13 @@ export default async function ReclamarPage({
 
   // 1. Validar Identidad (Auth Gate)
   const supabase = await createClient();
+  const reqHeaders = await headers();
+  const userAgent = reqHeaders.get("user-agent") || "Desconocido";
+
+  // Registro Anónimo de Escaneo
+  // No esperamos el resultado para no bloquear la pantalla al usuario
+  supabase.from("qr_scan_logs").insert([{ qr_token: token, user_agent: userAgent }]).then();
+
   const { data: authData, error: authError } = await supabase.auth.getUser();
 
   if (authError || !authData?.user) {

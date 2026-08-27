@@ -92,3 +92,26 @@ BEGIN
   );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 5. Tabla de Logs de Escaneos Anónimos (Fase de Pruebas)
+CREATE TABLE IF NOT EXISTS public.qr_scan_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  qr_token TEXT NOT NULL,
+  user_agent TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Habilitar RLS para qr_scan_logs
+ALTER TABLE public.qr_scan_logs ENABLE ROW LEVEL SECURITY;
+
+-- Permitir que cualquier persona (incluso sin login) inserte un log
+CREATE POLICY "Allow anonymous inserts" 
+ON public.qr_scan_logs FOR INSERT 
+TO public, anon 
+WITH CHECK (true);
+
+-- Solo usuarios autenticados pueden ver los logs (Opcional)
+CREATE POLICY "Allow reading for authenticated only"
+ON public.qr_scan_logs FOR SELECT
+TO authenticated
+USING (true);
