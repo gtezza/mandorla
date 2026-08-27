@@ -1,4 +1,4 @@
--- Script de Inicialización: Motor de Fidelización (Supabase)
+-- Script de Inicialización: Motor de Fidelización (Supabase) - QR Estático
 
 -- 1. Tabla de Usuarios (Opcional, si extendemos auth.users)
 CREATE TABLE IF NOT EXISTS public.profiles (
@@ -18,25 +18,24 @@ CREATE TABLE IF NOT EXISTS public.points_ledger (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 3. Tokens QR Generados (Punto de Venta)
+-- 3. Tokens QR Generados (Catálogo de QRs Impresos)
 CREATE TABLE IF NOT EXISTS public.qr_tokens (
   token UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   store_id TEXT NOT NULL,
   points_value INT NOT NULL,
-  is_used BOOLEAN DEFAULT FALSE,
-  used_by UUID REFERENCES auth.users(id),
-  used_at TIMESTAMPTZ,
+  is_active BOOLEAN DEFAULT TRUE,
   expires_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. Función Transaccional RPC: claim_qr_points
+-- 4. Función Transaccional RPC: claim_qr_points (Con Cooldown de 24 horas)
 CREATE OR REPLACE FUNCTION claim_qr_points(p_token UUID)
 RETURNS JSON AS $$
 DECLARE
   v_qr_record RECORD;
   v_user_id UUID;
   v_current_balance INT;
+  v_last_claim TIMESTAMPTZ;
 BEGIN
   -- Obtener usuario autenticado
   v_user_id := auth.uid();
@@ -44,35 +43,38 @@ BEGIN
     RETURN json_build_object('status', 401, 'message', 'No autenticado');
   END IF;
 
-  -- Bloquear la fila del token para evitar race conditions (Doble escaneo)
+  -- Obtener el Token QR
   SELECT * INTO v_qr_record 
   FROM public.qr_tokens 
-  WHERE token = p_token 
-  FOR UPDATE;
+  WHERE token = p_token;
 
   -- Validaciones
   IF NOT FOUND THEN
     RETURN json_build_object('status', 404, 'message', 'Token no encontrado');
   END IF;
 
-  IF v_qr_record.is_used THEN
-    RETURN json_build_object('status', 409, 'message', 'Token ya utilizado');
+  IF NOT v_qr_record.is_active THEN
+    RETURN json_build_object('status', 409, 'message', 'El código QR está desactivado');
   END IF;
 
   IF v_qr_record.expires_at < NOW() THEN
-    RETURN json_build_object('status', 410, 'message', 'Token expirado');
+    RETURN json_build_object('status', 410, 'message', 'El código QR ha expirado');
   END IF;
 
-  -- 1. Marcar como usado
-  UPDATE public.qr_tokens 
-  SET is_used = TRUE, used_by = v_user_id, used_at = NOW() 
-  WHERE token = p_token;
+  -- Sistema Antifraude: Verificar si el usuario escaneó ESTE token en las últimas 24 horas
+  SELECT MAX(created_at) INTO v_last_claim
+  FROM public.points_ledger
+  WHERE user_id = v_user_id AND qr_token = p_token;
 
-  -- 2. Insertar en ledger
+  IF v_last_claim IS NOT NULL AND (NOW() - v_last_claim) < INTERVAL '24 hours' THEN
+    RETURN json_build_object('status', 429, 'message', 'Solo puedes escanear este código una vez cada 24 horas.');
+  END IF;
+
+  -- Proceder a insertar en el ledger
   INSERT INTO public.points_ledger (user_id, amount, description, qr_token)
-  VALUES (v_user_id, v_qr_record.points_value, 'Canje de QR en tienda', p_token);
+  VALUES (v_user_id, v_qr_record.points_value, 'Canje de QR estático en tienda', p_token);
 
-  -- 3. Calcular balance actual
+  -- Calcular balance actual
   SELECT COALESCE(SUM(amount), 0) INTO v_current_balance 
   FROM public.points_ledger 
   WHERE user_id = v_user_id;
