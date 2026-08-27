@@ -25,23 +25,8 @@ export default async function ReclamarPage({
   const supabase = await createClient();
   const { data: authData, error: authError } = await supabase.auth.getUser();
 
-  // Si no está logueado, redirigir a un login ficticio retieniendo el token
-  // Nota: Deberás crear la página /login luego para manejar el registro
   if (authError || !authData?.user) {
-    // redirect(`/login?return_to=/reclamar?token=${token}`);
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
-          <h1 className="text-2xl font-bold text-blue-900 mb-4">¡Casi listo!</h1>
-          <p className="text-gray-600 mb-6">
-            Inicia sesión o regístrate para sumar los puntos de este código QR a tu cuenta.
-          </p>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg w-full transition-colors opacity-50 cursor-not-allowed">
-            (Botón Login: Próximamente)
-          </button>
-        </div>
-      </div>
-    );
+    redirect(`/login?return_to=/reclamar?token=${token}`);
   }
 
   // 2. Ejecutar Transacción (Claim Execution)
