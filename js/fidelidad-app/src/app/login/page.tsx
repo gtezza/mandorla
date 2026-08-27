@@ -11,11 +11,11 @@ export default async function LoginPage({
   const message = params.message;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-      <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full border border-gray-100">
-        <div className="text-center mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 sm:p-6">
+      <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-xl max-w-md w-full border border-gray-100">
+        <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-3xl font-extrabold text-blue-900 mb-2">Ingresar</h1>
-          <p className="text-gray-600">
+          <p className="text-sm sm:text-base text-gray-600">
             {success
               ? "Revisa tu bandeja de entrada"
               : "Ingresa tu correo para recibir un enlace de acceso seguro. No necesitas contraseña."}
@@ -23,7 +23,7 @@ export default async function LoginPage({
         </div>
 
         {success ? (
-          <div className="bg-green-50 text-green-800 p-4 rounded-xl text-center font-medium border border-green-200">
+          <div className="bg-green-50 text-green-800 p-4 rounded-xl text-center font-medium border border-green-200 text-sm sm:text-base">
             ¡Correo enviado! Revisa tu email y haz clic en el enlace mágico para continuar.
           </div>
         ) : (
@@ -40,7 +40,7 @@ export default async function LoginPage({
                 type="email"
                 placeholder="tu@correo.com"
                 required
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
+                className="w-full px-4 py-4 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all text-base"
               />
             </div>
 
@@ -52,7 +52,7 @@ export default async function LoginPage({
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all active:scale-[0.98]"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg shadow-md transition-all active:scale-[0.98] text-lg"
             >
               Enviar Enlace Mágico
             </button>

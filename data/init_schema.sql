@@ -1,10 +1,13 @@
 -- Script de Inicialización: Motor de Fidelización (Supabase) - QR Estático
 
--- 1. Tabla de Usuarios (Opcional, si extendemos auth.users)
+-- 1. Tabla de Usuarios (Perfiles extendidos)
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID REFERENCES auth.users(id) PRIMARY KEY,
-  full_name TEXT,
-  phone TEXT,
+  email TEXT NOT NULL,
+  full_name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  address TEXT NOT NULL,
+  birthday DATE NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -62,6 +65,7 @@ BEGIN
   END IF;
 
   -- Sistema Antifraude: Verificar si el usuario escaneó ESTE token en las últimas 24 horas
+  /* COMENTADO PARA ETAPA DE PRUEBA
   SELECT MAX(created_at) INTO v_last_claim
   FROM public.points_ledger
   WHERE user_id = v_user_id AND qr_token = p_token;
@@ -69,6 +73,7 @@ BEGIN
   IF v_last_claim IS NOT NULL AND (NOW() - v_last_claim) < INTERVAL '24 hours' THEN
     RETURN json_build_object('status', 429, 'message', 'Solo puedes escanear este código una vez cada 24 horas.');
   END IF;
+  */
 
   -- Proceder a insertar en el ledger
   INSERT INTO public.points_ledger (user_id, amount, description, qr_token)

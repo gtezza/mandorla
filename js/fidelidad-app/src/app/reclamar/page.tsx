@@ -29,6 +29,17 @@ export default async function ReclamarPage({
     redirect(`/login?return_to=/reclamar?token=${token}`);
   }
 
+  // 1.5. Interceptar si el usuario no tiene su perfil completo
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", authData.user.id)
+    .single();
+
+  if (!profile) {
+    redirect(`/completar-perfil?return_to=/reclamar?token=${token}`);
+  }
+
   // 2. Ejecutar Transacción (Claim Execution)
   const { data: rpcData, error: rpcError } = await supabase.rpc("claim_qr_points", { p_token: token });
 
