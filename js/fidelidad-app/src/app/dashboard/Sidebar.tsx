@@ -7,7 +7,8 @@ import {
   Users, 
   Settings, 
   Store,
-  Wallet
+  Wallet,
+  HelpCircle
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -41,6 +42,10 @@ export default function Sidebar() {
       <Link href="/dashboard/presupuesto" className={getLinkClass("/dashboard/presupuesto")}>
         <Wallet className="w-5 h-5" />
         Presupuesto de Puntos
+      </Link>
+      <Link href="/dashboard/ayuda" className={getLinkClass("/dashboard/ayuda")}>
+        <HelpCircle className="w-5 h-5" />
+        Ayuda
       </Link>
       <Link href="#" className={getLinkClass("/dashboard/configuracion")}>
         <Settings className="w-5 h-5" />
