@@ -16,14 +16,16 @@ export default async function DashboardPage() {
   const { data: authData, error: authError } = await supabase.auth.getUser();
 
   if (authError || !authData?.user) {
-    redirect("/login");
+    redirect("/admin/login");
   }
 
   // Verificar si es admin
-  const userEmail = authData.user.email || "";
-  if (!ADMIN_EMAILS.includes(userEmail)) {
-    // Si no es admin, lo mandamos a su panel de usuario normal (home o reclamar)
-    redirect("/");
+  const userEmail = authData.user.email?.toLowerCase() || "";
+  const isAdmin = ADMIN_EMAILS.some(admin => admin.toLowerCase() === userEmail);
+  
+  if (!isAdmin) {
+    // Si no es admin pero intenta entrar al dashboard, lo sacamos
+    redirect("/admin/login");
   }
 
   // 1. Obtener Datos
