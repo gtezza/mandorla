@@ -37,3 +37,4 @@ data/temp_*.sql
 
 # Documentos locales que no se suben
 docs/propuestas_login_seguros.md
+docs/railway_evolution_api.md
