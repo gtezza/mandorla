@@ -24,18 +24,22 @@ export async function createRedemptionProduct(formData: FormData) {
   const expires_at = expires_at_raw ? new Date(expires_at_raw).toISOString() : null;
 
   const supabase = await createClient();
-  const { error } = await supabase.from("redemption_products").insert([
-    {
-      sku,
-      title,
-      description,
-      image_url,
-      points_required,
-      additional_money,
-      expires_at,
-      is_active,
-    },
-  ]);
+  const { data, error } = await supabase
+    .from("redemption_products")
+    .insert([
+      {
+        sku,
+        title,
+        description,
+        image_url,
+        points_required,
+        additional_money,
+        expires_at,
+        is_active,
+      },
+    ])
+    .select("*")
+    .single();
 
   if (error) {
     return { success: false, message: error.message };
@@ -43,7 +47,7 @@ export async function createRedemptionProduct(formData: FormData) {
 
   revalidatePath("/dashboard/productos-canje");
   revalidatePath("/canjes");
-  return { success: true };
+  return { success: true, product: data };
 }
 
 export async function updateRedemptionProduct(formData: FormData) {
@@ -68,7 +72,7 @@ export async function updateRedemptionProduct(formData: FormData) {
   const expires_at = expires_at_raw ? new Date(expires_at_raw).toISOString() : null;
 
   const supabase = await createClient();
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("redemption_products")
     .update({
       sku,
@@ -81,7 +85,9 @@ export async function updateRedemptionProduct(formData: FormData) {
       is_active,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", id);
+    .eq("id", id)
+    .select("*")
+    .single();
 
   if (error) {
     return { success: false, message: error.message };
@@ -89,7 +95,7 @@ export async function updateRedemptionProduct(formData: FormData) {
 
   revalidatePath("/dashboard/productos-canje");
   revalidatePath("/canjes");
-  return { success: true };
+  return { success: true, product: data };
 }
 
 export async function toggleProductStatus(productId: string, currentStatus: boolean) {

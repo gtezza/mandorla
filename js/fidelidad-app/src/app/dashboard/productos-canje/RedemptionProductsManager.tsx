@@ -137,33 +137,34 @@ export default function RedemptionProductsManager({
     data.append("expires_at", formData.expires_at);
     data.append("is_active", formData.is_active ? "true" : "false");
 
-    const result = isCreatingNew ? await createRedemptionProduct(data) : await updateRedemptionProduct(data);
+    const shouldCreate = isCreatingNew || !formData.id;
+    const result = shouldCreate ? await createRedemptionProduct(data) : await updateRedemptionProduct(data);
 
     setIsSubmitting(false);
 
     if (result.success) {
       setFeedback({
         type: "success",
-        message: isCreatingNew ? "Producto creado exitosamente." : "Producto actualizado correctamente.",
+        message: shouldCreate ? "Producto creado exitosamente." : "Producto actualizado correctamente.",
       });
 
-      // Actualizar lista local optimista
-      if (isCreatingNew) {
-        const newProd: RedemptionProduct = {
-          id: Math.random().toString(), // fallback hasta revalidación
-          sku: formData.sku || null,
-          title: formData.title,
-          description: formData.description || null,
-          image_url: formData.image_url || null,
-          points_required: formData.points_required,
-          additional_money: formData.additional_money,
-          expires_at: formData.expires_at ? new Date(formData.expires_at).toISOString() : null,
-          is_active: formData.is_active,
-          created_at: new Date().toISOString(),
-        };
-        setProducts([newProd, ...products]);
+      // Actualizar lista local con el producto real
+      if (shouldCreate && result.product) {
+        const createdProd = result.product as RedemptionProduct;
+        setProducts([createdProd, ...products]);
         setIsCreatingNew(false);
-        setSelectedProductId(newProd.id);
+        setSelectedProductId(createdProd.id);
+        setFormData({
+          id: createdProd.id,
+          sku: createdProd.sku || "",
+          title: createdProd.title,
+          description: createdProd.description || "",
+          image_url: createdProd.image_url || "",
+          points_required: createdProd.points_required,
+          additional_money: createdProd.additional_money,
+          expires_at: createdProd.expires_at ? createdProd.expires_at.split("T")[0] : "",
+          is_active: createdProd.is_active,
+        });
       } else {
         setProducts(
           products.map((p) =>
