@@ -1,7 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { ArrowUpRight, ArrowDownRight, Activity, Users } from "lucide-react";
-import MetricasClientList from "./MetricasClientList";
 
 // MVP Security: Lista de correos con acceso
 const ADMIN_EMAILS = [
@@ -256,9 +255,6 @@ export default async function DashboardPage() {
           </div>
         </div>
       </div>
-
-      {/* Listado de Clientes agrupados en Métricas */}
-      <MetricasClientList clients={clientsData} />
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { redeemPoints } from "./actions";
-import { Search, History, MessageCircle, Gift, X } from "lucide-react";
+import { Search, History, MessageCircle, Gift, Download, X } from "lucide-react";
 
 interface Transaction {
   id: string;
@@ -25,7 +25,7 @@ export default function ClientManager({ initialClients }: { initialClients: Clie
   
   // Modales
   const [redeemModalOpen, setRedeemModalOpen] = useState(false);
-  const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [historyModalOpen, setHistoryModalOpen] = useState<"earned" | "redeemed" | null>(null);
   
   // Selección
   const [selectedClient, setSelectedClient] = useState<ClientData | null>(null);
@@ -46,9 +46,9 @@ export default function ClientManager({ initialClients }: { initialClients: Clie
     setRedeemModalOpen(true);
   };
 
-  const openHistoryModal = (client: ClientData) => {
+  const openHistoryModal = (client: ClientData, type: "earned" | "redeemed") => {
     setSelectedClient(client);
-    setHistoryModalOpen(true);
+    setHistoryModalOpen(type);
   };
 
   const handleRedeem = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -122,23 +122,31 @@ export default function ClientManager({ initialClients }: { initialClients: Clie
                   </td>
                   <td className="px-6 py-4 flex items-center justify-center gap-2">
                     <button 
-                      onClick={() => openHistoryModal(client)}
-                      title="Ver Historial de Puntos"
-                      className="p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
+                      onClick={() => openHistoryModal(client, "earned")}
+                      title="Ver Detalle de Obtención"
+                      className="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
                     >
-                      <History className="w-5 h-5" />
+                      <Download className="w-5 h-5 rotate-180" />
                     </button>
                     
                     <button 
+                      onClick={() => openHistoryModal(client, "redeemed")}
+                      title="Ver Detalle de Canjes"
+                      className="p-2 text-purple-600 hover:bg-purple-100 rounded-lg transition-colors"
+                    >
+                      <History className="w-5 h-5" />
+                    </button>
+
+                    <button 
                       title="Enviar WhatsApp (Próximamente)"
-                      className="p-2 text-green-500 hover:bg-green-50 hover:text-green-700 rounded-lg transition-colors cursor-not-allowed opacity-60"
+                      className="p-2 text-gray-400 hover:bg-green-50 hover:text-green-600 rounded-lg transition-colors cursor-not-allowed"
                     >
                       <MessageCircle className="w-5 h-5" />
                     </button>
 
                     <button 
                       onClick={() => openRedeemModal(client)}
-                      title="Canjear Puntos"
+                      title="Canjear Puntos Manualmente"
                       className="p-2 text-purple-600 hover:bg-purple-50 hover:text-purple-800 rounded-lg transition-colors ml-2 border border-purple-100 shadow-sm"
                     >
                       <Gift className="w-5 h-5" />
@@ -206,17 +214,25 @@ export default function ClientManager({ initialClients }: { initialClients: Clie
       {historyModalOpen && selectedClient && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6 relative max-h-[80vh] flex flex-col">
-            <button onClick={() => setHistoryModalOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-900">
+            <button onClick={() => setHistoryModalOpen(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-900">
               <X className="w-6 h-6" />
             </button>
-            <h3 className="text-xl font-bold text-gray-900 mb-1">Detalle de Actividad</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-1">
+              {historyModalOpen === "earned" ? "Detalle de Obtención" : "Detalle de Canjes"}
+            </h3>
             <p className="text-sm text-gray-500 pb-4 border-b border-gray-100">{selectedClient.full_name}</p>
 
             <div className="overflow-y-auto mt-4 space-y-3 flex-1 pr-2">
-              {selectedClient.history.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">No hay movimientos registrados.</p>
-              ) : (
-                selectedClient.history.map((tx) => (
+              {(() => {
+                const displayedHistory = selectedClient.history.filter(tx => 
+                  historyModalOpen === "earned" ? tx.amount > 0 : tx.amount < 0
+                );
+                
+                if (displayedHistory.length === 0) {
+                  return <p className="text-gray-500 text-center py-4">No hay registros de este tipo.</p>;
+                }
+
+                return displayedHistory.map((tx) => (
                   <div key={tx.id} className="flex justify-between items-center p-3 rounded-lg border border-gray-100 bg-gray-50">
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">{tx.description || "Movimiento general"}</p>
@@ -226,8 +242,8 @@ export default function ClientManager({ initialClients }: { initialClients: Clie
                       {tx.amount > 0 ? '+' : ''}{tx.amount}
                     </div>
                   </div>
-                ))
-              )}
+                ));
+              })()}
             </div>
           </div>
         </div>
