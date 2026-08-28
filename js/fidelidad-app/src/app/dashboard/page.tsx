@@ -31,8 +31,14 @@ export default async function DashboardPage() {
   const { data: ledger } = await supabase.from("points_ledger").select("*");
   const { data: profiles } = await supabase.from("profiles").select("*");
   const { data: qrTokens } = await supabase.from("qr_tokens").select("token, store_id");
+  const { data: promotionPoints } = await supabase.from("promotion_points").select("id, name");
 
   const records = ledger || [];
+  
+  // Mapa de Store ID a Nombre del Punto de Promoción
+  const ppMap = new Map((promotionPoints || []).map(p => [p.id, p.name]));
+  
+  // Mapa de Token QR a Store ID
   const qrMap = new Map((qrTokens || []).map(q => [q.token, q.store_id]));
 
   // Agrupar datos por cliente para el componente MetricasClientList
@@ -45,12 +51,26 @@ export default async function DashboardPage() {
       if (r.amount > 0) earned += r.amount;
       if (r.amount < 0) redeemed += r.amount;
 
+      let description = r.description;
+      let ppName = undefined;
+      
+      if (r.qr_token) {
+        const storeId = qrMap.get(r.qr_token);
+        if (storeId) {
+          ppName = ppMap.get(storeId) || `PP (ID: ${storeId.substring(0,4)}...)`;
+          // Si el mensaje es el genérico viejo o no tiene, lo reemplazamos
+          if (!description || description === 'Canje de QR estático en tienda') {
+            description = `Puntos obtenidos en ${ppName}`;
+          }
+        }
+      }
+
       return {
         id: r.id,
         amount: r.amount,
-        description: r.description,
+        description: description,
         date: r.created_at,
-        store_id: r.qr_token ? qrMap.get(r.qr_token) : undefined
+        store_id: ppName // Usamos el nombre real en vez del ID puro
       };
     });
 

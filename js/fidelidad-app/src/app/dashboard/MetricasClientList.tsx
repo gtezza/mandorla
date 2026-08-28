@@ -131,9 +131,6 @@ export default function MetricasClientList({ clients }: { clients: ClientData[] 
                   <div key={tx.id} className="flex justify-between items-center p-3 rounded-lg border border-gray-100 bg-gray-50">
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">{tx.description || "Movimiento general"}</p>
-                      {modalType === "earned" && tx.store_id && (
-                        <p className="text-xs font-medium text-blue-600 mt-0.5">Sucursal: {tx.store_id}</p>
-                      )}
                       <p className="text-xs text-gray-400 mt-1">{new Date(tx.date).toLocaleString('es-AR')}</p>
                     </div>
                     <div className={`font-black ${tx.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
