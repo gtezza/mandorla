@@ -28,3 +28,9 @@ Thumbs.db
 # Archivos de caché
 .eslintcache
 .stylelintcache
+
+# Supabase (Archivos temporales locales)
+supabase/.temp/
+
+# Archivos de migración temporales
+data/temp_*.sql
