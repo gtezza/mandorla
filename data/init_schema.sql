@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS public.qr_tokens (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. Función Transaccional RPC: claim_qr_points (Con Cooldown de 24 horas)
+-- 4. Función Transaccional RPC: claim_qr_points (Con Cooldown y Presupuesto)
 CREATE OR REPLACE FUNCTION claim_qr_points(p_token UUID)
 RETURNS JSON AS $$
 DECLARE
@@ -39,6 +39,11 @@ DECLARE
   v_user_id UUID;
   v_current_balance INT;
   v_last_claim TIMESTAMPTZ;
+  
+  v_budget RECORD;
+  v_distributed INT;
+  
+  v_pp_name TEXT;
 BEGIN
   -- Obtener usuario autenticado
   v_user_id := auth.uid();
@@ -64,20 +69,49 @@ BEGIN
     RETURN json_build_object('status', 410, 'message', 'El código QR ha expirado');
   END IF;
 
-  -- Sistema Antifraude: Verificar si el usuario escaneó ESTE token en las últimas 24 horas
-  /* COMENTADO PARA ETAPA DE PRUEBA
-  SELECT MAX(created_at) INTO v_last_claim
-  FROM public.points_ledger
-  WHERE user_id = v_user_id AND qr_token = p_token;
+  -- Validar Presupuesto Activo
+  SELECT * INTO v_budget FROM public.point_budgets WHERE is_active = true LIMIT 1;
+  IF FOUND AND v_budget.budget_type != 'none' THEN
+    
+    IF (v_budget.budget_type = 'date_range' OR v_budget.budget_type = 'both') THEN
+      IF v_budget.start_date IS NOT NULL AND CURRENT_DATE < v_budget.start_date THEN
+          RETURN json_build_object('status', 400, 'message', 'La promoción aún no ha comenzado.');
+      END IF;
+      IF v_budget.end_date IS NOT NULL AND CURRENT_DATE > v_budget.end_date THEN
+          RETURN json_build_object('status', 400, 'message', 'La promoción ha finalizado (fuera de fecha).');
+      END IF;
+    END IF;
 
-  IF v_last_claim IS NOT NULL AND (NOW() - v_last_claim) < INTERVAL '24 hours' THEN
-    RETURN json_build_object('status', 429, 'message', 'Solo puedes escanear este código una vez cada 24 horas.');
+    IF (v_budget.budget_type = 'fixed_bag' OR v_budget.budget_type = 'both') THEN
+      -- Calcular puntos entregados
+      IF v_budget.budget_type = 'both' THEN
+        SELECT COALESCE(SUM(amount), 0) INTO v_distributed
+        FROM public.points_ledger
+        WHERE DATE(created_at) >= COALESCE(v_budget.start_date, '1970-01-01') 
+          AND DATE(created_at) <= COALESCE(v_budget.end_date, '9999-12-31');
+      ELSE
+        SELECT COALESCE(SUM(amount), 0) INTO v_distributed
+        FROM public.points_ledger;
+      END IF;
+
+      IF (v_distributed + v_qr_record.points_value) > v_budget.total_points THEN
+          RETURN json_build_object('status', 400, 'message', 'La promoción ha finalizado (cupo agotado).');
+      END IF;
+    END IF;
+
   END IF;
-  */
+
+  -- Obtener nombre del punto de promoción
+  SELECT name INTO v_pp_name FROM public.promotion_points WHERE id::text = v_qr_record.store_id;
 
   -- Proceder a insertar en el ledger
   INSERT INTO public.points_ledger (user_id, amount, description, qr_token)
-  VALUES (v_user_id, v_qr_record.points_value, 'Canje de QR estático en tienda', p_token);
+  VALUES (
+    v_user_id, 
+    v_qr_record.points_value, 
+    'Puntos obtenidos en ' || COALESCE(v_pp_name, 'Punto Promoción ' || SUBSTRING(v_qr_record.store_id FROM 1 FOR 4)), 
+    p_token
+  );
 
   -- Calcular balance actual
   SELECT COALESCE(SUM(amount), 0) INTO v_current_balance 
@@ -115,3 +149,24 @@ CREATE POLICY "Allow reading for authenticated only"
 ON public.qr_scan_logs FOR SELECT
 TO authenticated
 USING (true);
+
+-- 6. Tabla de Puntos de Promoción (Sucursales/Negocios)
+CREATE TABLE IF NOT EXISTS public.promotion_points (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  address TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  manager TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 7. Tabla de Presupuestos / Bolsa de Puntos
+CREATE TABLE IF NOT EXISTS public.point_budgets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  budget_type TEXT NOT NULL, -- Valores: 'date_range', 'fixed_bag', 'both', 'none'
+  total_points INT DEFAULT 0,
+  start_date DATE,
+  end_date DATE,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);

@@ -1,3 +1,20 @@
+#Manual de reclamo de puntos
+acceder a https://fidelidad.gtdata.com.ar se va a abrir la pantalla de login de prueba
+Elegir "Ir a Simulador de Cajas (Prueba)"
+Con el celu apuntar al qr
+Si no estas logeado te va a pedir que te registres usando un mail (ahora no se verifica)
+abre el form y pide los datos que se ven en pantanlla:
+El mail es el que el usuario coloco sin validar en esta etapa de MVP
+para el caso del celular tener en cuenta que la carga es manual
+  Si logramos detectar el teléfono del cliente automáticamente al iniciar sesión (por ejemplo si inicia sesión vía SMS o WhatsApp), se pondrá ese número exacto.
+  Si el cliente inicia sesión por email o Google, el campo ya vendrá precargado por defecto con el prefijo +54 9  (el estándar internacional para celulares en Argentina). De esta forma el cliente solo tiene que escribir su código de área (como 11) y el resto de su celular.
+Una vez registrado debe indicar los puntos ganados
+
+
+
+
+
+
 # Manual Rápido: Acceso y Uso del Panel de Administrador
 
 Este manual está diseñado para guiarte en tu primera prueba del sistema de fidelización CRM Mandorla, desde el inicio de sesión hasta la gestión en el panel de control.
@@ -8,9 +25,11 @@ Este manual está diseñado para guiarte en tu primera prueba del sistema de fid
 
 Para acceder a las funciones administrativas y poder gestionar los puntos, presupuestos y clientes, debes iniciar sesión con una cuenta autorizada.
 
-1. **Ingresa a la URL de acceso:** Dirígete a la ruta `/admin/login` en tu navegador (por ejemplo: `http://localhost:3000/admin/login`).
+1. **Ingresa a la URL de acceso:** Dirígete a la ruta `/admin/login` en tu navegador (por ejemplo: `https://fidelidad.gtdata.com.ar/admin/login`).
 2. **Inicia sesión:** Puedes utilizar tu cuenta de Google o bien ingresar un Correo Electrónico.
-   > **Nota de Seguridad:** Actualmente, el sistema está configurado en modo *MVP* (Producto Mínimo Viable) y solo permite el acceso al panel a una lista específica de correos electrónicos autorizados (como `gerardo@gtdata.com.ar`). Si ingresas con un correo no autorizado, no podrás ver el panel.
+   > **Nota de Seguridad:** Actualmente, el sistema está configurado en modo *MVP* (Producto Mínimo Viable) y solo permite el acceso al panel a una lista específica de correos electrónicos autorizados:
+   Correo: gerardo@gtdata.com.ar
+  Contraseña: Mandorla2026Test!.
 3. **Redirección automática:** Una vez validados tus datos, el sistema te redirigirá automáticamente al **Dashboard**.
 
 ---
