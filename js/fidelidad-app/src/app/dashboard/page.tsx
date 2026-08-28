@@ -85,6 +85,42 @@ export default async function DashboardPage() {
   const diffDaily = calcDiff(pointsToday, pointsYesterday);
   const diffMonthly = calcDiff(pointsThisMonth, pointsLastMonth);
 
+  // 4. Calcular Métricas de Presupuesto
+  const { data: activeBudget } = await supabase
+    .from("point_budgets")
+    .select("*")
+    .eq("is_active", true)
+    .single();
+
+  let budgetDistributed = 0;
+  let budgetRemaining: number | null = null;
+  let hasBudget = false;
+  let budgetLabel = "Sin Límite";
+
+  if (activeBudget && activeBudget.budget_type !== 'none') {
+    hasBudget = true;
+    records.forEach(r => {
+      const d = new Date(r.created_at);
+      let inRange = true;
+      if ((activeBudget.budget_type === 'date_range' || activeBudget.budget_type === 'both') && activeBudget.start_date && activeBudget.end_date) {
+        const start = new Date(activeBudget.start_date);
+        const end = new Date(activeBudget.end_date);
+        end.setHours(23, 59, 59, 999);
+        if (d < start || d > end) inRange = false;
+      }
+      if (inRange) {
+        budgetDistributed += r.amount;
+      }
+    });
+
+    if (activeBudget.budget_type === 'fixed_bag' || activeBudget.budget_type === 'both') {
+      budgetRemaining = activeBudget.total_points - budgetDistributed;
+      budgetLabel = `Límite: ${activeBudget.total_points}`;
+    } else if (activeBudget.budget_type === 'date_range') {
+      budgetLabel = `Por Fechas (${activeBudget.start_date} a ${activeBudget.end_date})`;
+    }
+  }
+
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
@@ -95,7 +131,40 @@ export default async function DashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Card Presupuesto / Bolsa */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col relative overflow-hidden">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-gray-500 font-medium">Bolsa de Puntos</h3>
+            <div className="p-2 bg-purple-50 rounded-lg">
+              <Activity className="w-5 h-5 text-purple-600" />
+            </div>
+          </div>
+          
+          {hasBudget ? (
+            <>
+              <p className="text-4xl font-bold text-gray-900 mb-2">{budgetDistributed}</p>
+              <div className="flex items-center justify-between text-sm text-gray-500">
+                <span>entregados</span>
+                <span className="font-semibold text-gray-900">{budgetLabel}</span>
+              </div>
+              
+              {budgetRemaining !== null && (
+                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                  <span className="text-sm font-medium text-gray-500">Saldo Restante</span>
+                  <span className={`text-lg font-bold ${budgetRemaining <= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                    {budgetRemaining}
+                  </span>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full text-gray-400">
+              <span className="text-sm">Sin presupuesto activo</span>
+            </div>
+          )}
+        </div>
+
         {/* Card Hoy */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col relative overflow-hidden">
           <div className="flex items-center justify-between mb-4">
