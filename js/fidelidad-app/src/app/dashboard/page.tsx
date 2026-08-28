@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { ArrowUpRight, ArrowDownRight, Activity, Users } from "lucide-react";
+import MetricasClientList from "./MetricasClientList";
 
 // MVP Security: Lista de correos con acceso
 const ADMIN_EMAILS = [
@@ -23,15 +24,47 @@ export default async function DashboardPage() {
   const isAdmin = ADMIN_EMAILS.some(admin => admin.toLowerCase() === userEmail);
   
   if (!isAdmin) {
-    // Si no es admin pero intenta entrar al dashboard, lo sacamos
     redirect("/admin/login");
   }
 
   // 1. Obtener Datos
   const { data: ledger } = await supabase.from("points_ledger").select("*");
-  const { data: profiles } = await supabase.from("profiles").select("id, full_name, email");
+  const { data: profiles } = await supabase.from("profiles").select("*");
+  const { data: qrTokens } = await supabase.from("qr_tokens").select("token, store_id");
 
   const records = ledger || [];
+  const qrMap = new Map((qrTokens || []).map(q => [q.token, q.store_id]));
+
+  // Agrupar datos por cliente para el componente MetricasClientList
+  const clientsData = (profiles || []).map(profile => {
+    const userLedger = records.filter(r => r.user_id === profile.id);
+    let earned = 0;
+    let redeemed = 0;
+    
+    const history = userLedger.map(r => {
+      if (r.amount > 0) earned += r.amount;
+      if (r.amount < 0) redeemed += r.amount;
+
+      return {
+        id: r.id,
+        amount: r.amount,
+        description: r.description,
+        date: r.created_at,
+        store_id: r.qr_token ? qrMap.get(r.qr_token) : undefined
+      };
+    });
+
+    return {
+      id: profile.id,
+      full_name: profile.full_name,
+      email: profile.email,
+      phone: profile.phone,
+      earned,
+      redeemed,
+      balance: earned + redeemed, // O sumar todo el ledger, es lo mismo
+      history
+    };
+  });
 
   // 3. Calcular Métricas
   const now = new Date();
@@ -203,6 +236,9 @@ export default async function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Listado de Clientes agrupados en Métricas */}
+      <MetricasClientList clients={clientsData} />
     </div>
   );
 }
