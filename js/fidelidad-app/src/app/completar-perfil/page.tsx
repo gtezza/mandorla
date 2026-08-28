@@ -77,6 +77,7 @@ export default async function CompletarPerfilPage({
               name="phone"
               type="tel"
               placeholder="+54 9 11 1234-5678"
+              defaultValue={authData.user.phone || "+54 9 "}
               required
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all text-base"
             />
