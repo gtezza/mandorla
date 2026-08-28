@@ -36,4 +36,4 @@ supabase/.temp/
 data/temp_*.sql
 
 # Documentos locales que no se suben
-docs/propuestas_onboarding.md
+docs/propuestas_login_seguros.md
