@@ -1,7 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import SortableTable from "./SortableTable";
-import { ArrowUpRight, ArrowDownRight, Activity } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Activity, Users } from "lucide-react";
 
 // MVP Security: Lista de correos con acceso
 const ADMIN_EMAILS = [
@@ -33,19 +32,6 @@ export default async function DashboardPage() {
   const { data: profiles } = await supabase.from("profiles").select("id, full_name, email");
 
   const records = ledger || [];
-  const profilesMap = new Map((profiles || []).map(p => [p.id, p]));
-
-  // 2. Unir datos para la tabla
-  const tableData = records.map(r => {
-    const profile = profilesMap.get(r.user_id);
-    return {
-      id: r.id,
-      full_name: profile?.full_name || "Desconocido",
-      email: profile?.email || "Sin correo",
-      amount: r.amount,
-      created_at: r.created_at,
-    };
-  });
 
   // 3. Calcular Métricas
   const now = new Date();
@@ -131,7 +117,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Card Presupuesto / Bolsa */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col relative overflow-hidden">
           <div className="flex items-center justify-between mb-4">
@@ -202,12 +188,20 @@ export default async function DashboardPage() {
             <span className="text-sm text-gray-400">vs mes anterior ({pointsLastMonth})</span>
           </div>
         </div>
-      </div>
 
-      {/* Table Section */}
-      <div>
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Historial de Transacciones</h2>
-        <SortableTable initialData={tableData} />
+        {/* Card Clientes */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col relative overflow-hidden">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-gray-500 font-medium">Total de Clientes</h3>
+            <div className="p-2 bg-orange-50 rounded-lg">
+              <Users className="w-5 h-5 text-orange-600" />
+            </div>
+          </div>
+          <p className="text-4xl font-bold text-gray-900 mb-2">{(profiles || []).length}</p>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-400">Registrados en la plataforma</span>
+          </div>
+        </div>
       </div>
     </div>
   );

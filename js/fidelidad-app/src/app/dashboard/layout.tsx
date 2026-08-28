@@ -30,11 +30,11 @@ export default function DashboardLayout({
             Métricas
           </Link>
           <Link 
-            href="#" 
+            href="/dashboard/clientes" 
             className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
           >
             <Users className="w-5 h-5" />
-            Clientes (Próximamente)
+            Clientes
           </Link>
           <Link 
             href="/dashboard/puntos" 
