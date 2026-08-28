@@ -412,21 +412,57 @@ export default function RedemptionProductsManager({
                 <ImageIcon className="w-8 h-8 text-gray-300" />
               )}
             </div>
-            <div className="flex-1 w-full">
-              <label htmlFor="image_url" className="block text-xs font-semibold text-gray-700 mb-1">
-                URL de la Foto / Imagen del Producto
-              </label>
-              <input
-                id="image_url"
-                type="url"
-                placeholder="https://ejemplo.com/fotos/alfajor.jpg"
-                value={formData.image_url}
-                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                className="w-full px-3.5 py-2 text-xs rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none bg-white"
-              />
-              <span className="text-[11px] text-gray-400 mt-1 block">
-                Pega el enlace directo a la imagen del producto para mostrar en el catálogo.
-              </span>
+            <div className="flex-1 w-full space-y-2">
+              <div>
+                <label htmlFor="image_url" className="block text-xs font-semibold text-gray-700 mb-1">
+                  Foto / Imagen del Producto (URL o Ruta Local)
+                </label>
+                <input
+                  id="image_url"
+                  type="text"
+                  placeholder="Ej. /img/caja alfajores.jpeg o https://..."
+                  value={formData.image_url}
+                  onChange={(e) => {
+                    let val = e.target.value.trim();
+                    // Normalización inteligente: si pega ruta absoluta de disco C:\...\img\foto.jpg -> /img/foto.jpg
+                    if (val.includes("img\\") || val.includes("img/")) {
+                      const fileName = val.split(/[\\\/]/).pop();
+                      if (fileName) val = `/img/${fileName}`;
+                    }
+                    setFormData({ ...formData, image_url: val });
+                  }}
+                  className="w-full px-3.5 py-2 text-xs rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none bg-white font-mono"
+                />
+              </div>
+
+              {/* Selector Rápido de Fotos Locales */}
+              <div>
+                <span className="text-[11px] font-semibold text-gray-500 block mb-1.5">
+                  Galería local de productos (haz clic para asignar):
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {[
+                    { label: "Caja Alfajores", path: "/img/caja alfajores.jpeg" },
+                    { label: "Chocolate Blanco", path: "/img/Chocolate Blanco.jpeg" },
+                    { label: "Limoncello", path: "/img/Limoncello.jpeg" },
+                    { label: "Desayuno Simple", path: "/img/Desayuno simple.jpeg" },
+                    { label: "Desayuno Grande", path: "/img/desayuno_grande.jpg" },
+                  ].map((imgItem) => (
+                    <button
+                      key={imgItem.path}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, image_url: imgItem.path })}
+                      className={`text-[11px] px-2.5 py-1 rounded-md border font-medium transition-all ${
+                        formData.image_url === imgItem.path
+                          ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 hover:border-gray-300"
+                      }`}
+                    >
+                      {imgItem.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
