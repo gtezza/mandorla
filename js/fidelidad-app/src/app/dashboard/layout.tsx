@@ -3,7 +3,8 @@ import {
   LayoutDashboard, 
   Users, 
   Settings, 
-  LogOut 
+  LogOut,
+  Store
 } from "lucide-react";
 
 export default function DashboardLayout({
@@ -33,6 +34,13 @@ export default function DashboardLayout({
           >
             <Users className="w-5 h-5" />
             Clientes (Próximamente)
+          </Link>
+          <Link 
+            href="/dashboard/puntos" 
+            className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          >
+            <Store className="w-5 h-5" />
+            Puntos de Prom.
           </Link>
           <Link 
             href="#" 
