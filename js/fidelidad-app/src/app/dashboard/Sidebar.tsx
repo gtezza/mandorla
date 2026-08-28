@@ -8,6 +8,7 @@ import {
   Settings, 
   Store,
   Wallet,
+  Gift,
   HelpCircle
 } from "lucide-react";
 
@@ -21,7 +22,7 @@ export default function Sidebar() {
       : pathname.startsWith(path);
       
     return isActive
-      ? "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg bg-blue-50 text-blue-700"
+      ? "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg bg-blue-50 text-blue-700 font-semibold"
       : "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors";
   };
 
@@ -34,6 +35,10 @@ export default function Sidebar() {
       <Link href="/dashboard/clientes" className={getLinkClass("/dashboard/clientes")}>
         <Users className="w-5 h-5" />
         Clientes
+      </Link>
+      <Link href="/dashboard/productos-canje" className={getLinkClass("/dashboard/productos-canje")}>
+        <Gift className="w-5 h-5 text-blue-600" />
+        Productos de Canje
       </Link>
       <Link href="/dashboard/puntos" className={getLinkClass("/dashboard/puntos")}>
         <Store className="w-5 h-5" />
