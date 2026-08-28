@@ -34,3 +34,6 @@ supabase/.temp/
 
 # Archivos de migración temporales
 data/temp_*.sql
+
+# Documentos locales que no se suben
+docs/propuestas_onboarding.md
