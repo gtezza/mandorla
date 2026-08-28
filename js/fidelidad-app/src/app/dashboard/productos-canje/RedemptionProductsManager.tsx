@@ -556,20 +556,47 @@ export default function RedemptionProductsManager({
             </div>
 
             <div>
-              <label htmlFor="expires_at" className="block text-xs font-bold text-blue-950 uppercase mb-1 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-gray-600" />
-                Fecha de Caducidad
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label htmlFor="expires_at" className="block text-xs font-bold text-blue-950 uppercase flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-gray-600" />
+                  Fecha de Caducidad
+                </label>
+                {formData.expires_at && (
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, expires_at: "" })}
+                    className="text-[10px] text-blue-700 hover:underline font-semibold"
+                  >
+                    Hacer permanente
+                  </button>
+                )}
+              </div>
               <input
                 id="expires_at"
                 type="date"
                 value={formData.expires_at}
                 onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
-                className="w-full px-3.5 py-2 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none bg-white text-gray-700"
+                className={`w-full px-3.5 py-2 text-sm rounded-lg border focus:ring-2 focus:ring-blue-600 outline-none bg-white text-gray-700 ${
+                  formData.expires_at && new Date(formData.expires_at + "T23:59:59") < new Date()
+                    ? "border-amber-400 bg-amber-50/50"
+                    : "border-gray-300"
+                }`}
               />
-              <span className="text-[10px] text-gray-500 mt-1 block">
-                Dejar vacío si no tiene vencimiento.
-              </span>
+              {formData.expires_at ? (
+                new Date(formData.expires_at + "T23:59:59") < new Date() ? (
+                  <span className="text-[10px] text-amber-700 font-semibold mt-1 flex items-center gap-1">
+                    ⚠️ Fecha pasada: se mostrará como expirado.
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-green-700 font-medium mt-1 block">
+                    Válido hasta el {new Date(formData.expires_at + "T12:00:00").toLocaleDateString("es-AR")}.
+                  </span>
+                )
+              ) : (
+                <span className="text-[10px] text-gray-500 mt-1 block">
+                  Promoción permanente (sin fecha límite).
+                </span>
+              )}
             </div>
           </div>
 
