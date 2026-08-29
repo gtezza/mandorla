@@ -9,7 +9,8 @@ import {
   Store,
   Wallet,
   Gift,
-  HelpCircle
+  HelpCircle,
+  LineChart
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -31,6 +32,10 @@ export default function Sidebar() {
       <Link href="/dashboard" className={getLinkClass("/dashboard")}>
         <LayoutDashboard className="w-5 h-5" />
         Métricas
+      </Link>
+      <Link href="/dashboard/insights" className={getLinkClass("/dashboard/insights")}>
+        <LineChart className="w-5 h-5 text-indigo-600" />
+        Insights
       </Link>
       <Link href="/dashboard/clientes" className={getLinkClass("/dashboard/clientes")}>
         <Users className="w-5 h-5" />
