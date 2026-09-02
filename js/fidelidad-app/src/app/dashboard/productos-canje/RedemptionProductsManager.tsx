@@ -15,6 +15,8 @@ import {
   Eye,
   Power,
   Sparkles,
+  Upload,
+  X,
 } from "lucide-react";
 import { createRedemptionProduct, updateRedemptionProduct, toggleProductStatus } from "./actions";
 
@@ -198,6 +200,35 @@ export default function RedemptionProductsManager({
         setFormData({ ...formData, is_active: !currentStatus });
       }
     }
+  };
+
+  // Manejador para carga de imagen desde computadora local (cualquier directorio)
+  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setFeedback({ type: "error", message: "Por favor, selecciona un archivo de imagen válido." });
+      return;
+    }
+
+    // Límite de 5MB
+    if (file.size > 5 * 1024 * 1024) {
+      setFeedback({ type: "error", message: "La imagen no debe superar los 5MB." });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setFormData((prev) => ({ ...prev, image_url: reader.result as string }));
+        setFeedback({ type: "success", message: `Imagen "${file.name}" cargada localmente con éxito.` });
+      }
+    };
+    reader.onerror = () => {
+      setFeedback({ type: "error", message: "Error al leer la imagen seleccionada." });
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -397,49 +428,86 @@ export default function RedemptionProductsManager({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Previsualización de Imagen */}
-          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-24 h-24 rounded-xl bg-white border border-gray-300 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+          {/* Previsualización y Carga de Imagen */}
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            {/* Contenedor de Vista Previa con botón para remover */}
+            <div className="relative w-28 h-28 rounded-xl bg-white border border-gray-300 flex items-center justify-center overflow-hidden shrink-0 shadow-inner group">
               {formData.image_url ? (
-                <img
-                  src={formData.image_url}
-                  alt="Vista previa"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = "none";
-                  }}
-                />
+                <>
+                  <img
+                    src={formData.image_url}
+                    alt="Vista previa"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = "none";
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, image_url: "" })}
+                    title="Eliminar imagen"
+                    className="absolute top-1 right-1 p-1 bg-red-600 text-white rounded-full opacity-80 hover:opacity-100 transition-opacity shadow-sm"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </>
               ) : (
-                <ImageIcon className="w-8 h-8 text-gray-300" />
+                <div className="flex flex-col items-center justify-center text-gray-400 gap-1 p-2 text-center">
+                  <ImageIcon className="w-8 h-8 text-gray-300" />
+                  <span className="text-[10px] leading-tight">Sin imagen</span>
+                </div>
               )}
             </div>
-            <div className="flex-1 w-full space-y-2">
+
+            <div className="flex-1 w-full space-y-3">
+              {/* Botón Principal: Cargar desde Computadora Local */}
               <div>
-                <label htmlFor="image_url" className="block text-xs font-semibold text-gray-700 mb-1">
-                  Foto / Imagen del Producto (URL o Ruta Local)
+                <label className="block text-xs font-semibold text-gray-800 mb-1">
+                  Cargar foto desde cualquier carpeta de tu computadora
+                </label>
+                <div className="flex flex-wrap items-center gap-2">
+                  <label className="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-all hover:shadow active:scale-95">
+                    <Upload className="w-4 h-4" />
+                    <span>Seleccionar imagen local...</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageFileUpload}
+                      className="hidden"
+                    />
+                  </label>
+                  <span className="text-[11px] text-gray-500">
+                    Soporta JPG, PNG, WEBP, GIF (cualquier directorio)
+                  </span>
+                </div>
+              </div>
+
+              {/* Opción Manual: URL o Ruta */}
+              <div>
+                <label htmlFor="image_url" className="block text-[11px] font-medium text-gray-600 mb-1">
+                  O introduce una URL / Ruta web manual:
                 </label>
                 <input
                   id="image_url"
                   type="text"
                   placeholder="Ej. /img/caja alfajores.jpeg o https://..."
-                  value={formData.image_url}
+                  value={formData.image_url.startsWith("data:") ? "Imagen local cargada (Base64)" : formData.image_url}
                   onChange={(e) => {
                     let val = e.target.value.trim();
-                    // Normalización inteligente: si pega ruta absoluta de disco C:\...\img\foto.jpg -> /img/foto.jpg
                     if (val.includes("img\\") || val.includes("img/")) {
                       const fileName = val.split(/[\\\/]/).pop();
                       if (fileName) val = `/img/${fileName}`;
                     }
                     setFormData({ ...formData, image_url: val });
                   }}
-                  className="w-full px-3.5 py-2 text-xs rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none bg-white font-mono"
+                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none bg-white font-mono"
                 />
               </div>
 
-              {/* Selector Rápido de Fotos Locales */}
+              {/* Selector Rápido de Fotos Predeterminadas */}
               <div>
-                <span className="text-[11px] font-semibold text-gray-500 block mb-1.5">
-                  Galería local de productos (haz clic para asignar):
+                <span className="text-[11px] font-semibold text-gray-500 block mb-1">
+                  Galería predeterminada:
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {[
