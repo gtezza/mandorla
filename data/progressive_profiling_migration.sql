@@ -1,16 +1,16 @@
 -- ==============================================================================
--- MIGRACIÓN: PERFILADO PROGRESIVO Y AUTENTICACIÓN GOOGLE
--- 1. Permitir que los campos phone, address y birthday sean opcionales (NULL)
---    al crearse el usuario automáticamente desde Google OAuth.
--- 2. Trigger automático opcional para crear el perfil básico al crearse un usuario en auth.users.
+-- MIGRACIÓN COMPLETA: LOGIN CON GOOGLE, PERFILADO PROGRESIVO Y SEGURIDAD RLS
+-- Proyecto: Fidelización CRM Mandorla
+-- Archivo: progressive_profiling_migration.sql
 -- ==============================================================================
 
--- 1. Hacer campos opcionales en public.profiles para registro rápido (Fricción Cero)
+-- 1. ADAPTACIÓN DE TABLA PROFILES PARA PERFILADO PROGRESIVO (FRICCIÓN CERO)
+-- Permitir que teléfono, dirección y cumpleaños sean opcionales inicialmente
 ALTER TABLE public.profiles ALTER COLUMN phone DROP NOT NULL;
 ALTER TABLE public.profiles ALTER COLUMN address DROP NOT NULL;
 ALTER TABLE public.profiles ALTER COLUMN birthday DROP NOT NULL;
 
--- 2. Función y Trigger automático al registrarse con Google u otro proveedor
+-- 2. FUNCIÓN SEGURA PARA CREACIÓN AUTOMÁTICA DE PERFIL (GOOGLE OAUTH & EMAIL)
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -40,11 +40,34 @@ BEGIN
 END;
 $$;
 
--- Crear el trigger en auth.users si no existe
+-- 3. TRIGGER AUTOMÁTICO VINCULADO A AUTH.USERS
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- Notificar recarga de schema
+-- 4. POLÍTICAS RLS PARA PERMITIR OPERACIÓN FLUIDA DE USUARIOS
+DROP POLICY IF EXISTS "Los usuarios pueden ver su propio perfil" ON public.profiles;
+CREATE POLICY "Los usuarios pueden ver su propio perfil"
+  ON public.profiles
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Los usuarios pueden insertar su propio perfil" ON public.profiles;
+CREATE POLICY "Los usuarios pueden insertar su propio perfil"
+  ON public.profiles
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Los usuarios pueden actualizar su propio perfil" ON public.profiles;
+CREATE POLICY "Los usuarios pueden actualizar su propio perfil"
+  ON public.profiles
+  FOR UPDATE
+  TO authenticated
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id);
+
+-- 5. RECARGA DE SCHEMA CACHE
 NOTIFY pgrst, 'reload schema';
