@@ -44,7 +44,7 @@ export default async function ReclamarPage({
     redirect(`/login?return_to=/reclamar?token=${token}`);
   }
 
-  // 1.5. Interceptar si el usuario no tiene su perfil completo
+  // 1.5. Perfilado Progresivo: Asegurar perfil base si aún no existe
   const { data: profile } = await supabase
     .from("profiles")
     .select("id")
@@ -52,7 +52,16 @@ export default async function ReclamarPage({
     .single();
 
   if (!profile) {
-    redirect(`/completar-perfil?return_to=/reclamar?token=${token}`);
+    const metadata = authData.user.user_metadata || {};
+    const fullName = metadata.full_name || metadata.name || authData.user.email?.split("@")[0] || "Cliente Mandorla";
+    await supabase.from("profiles").upsert({
+      id: authData.user.id,
+      email: authData.user.email || "",
+      full_name: fullName,
+      phone: null,
+      address: null,
+      birthday: null,
+    });
   }
 
   // 2. Ejecutar Transacción (Claim Execution)

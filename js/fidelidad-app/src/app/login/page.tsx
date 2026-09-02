@@ -1,4 +1,5 @@
-import { loginWithEmail } from "./actions";
+import LoginForm from "./LoginForm";
+import { Sparkles, Gift } from "lucide-react";
 
 export default async function LoginPage({
   searchParams,
@@ -7,57 +8,32 @@ export default async function LoginPage({
 }) {
   const params = await searchParams;
   const returnTo = params.return_to || "/";
-  const success = params.success === "true";
   const message = params.message;
 
+  const isClaiming = returnTo.includes("/reclamar");
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 sm:p-6">
-      <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-xl max-w-md w-full border border-gray-100">
-        <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-3xl font-extrabold text-blue-900 mb-2">Ingresar</h1>
-          <p className="text-sm sm:text-base text-gray-600">
-            {success
-              ? "Revisa tu bandeja de entrada"
-              : "Ingresa tu correo para recibir un enlace de acceso seguro. No necesitas contraseña."}
+    <div className="min-h-screen flex items-center justify-center bg-[#1a0e0d] text-[#f5efe6] p-4 sm:p-6 relative overflow-hidden">
+      {/* Fondo decorativo premium */}
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#c6a96b]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#c6a96b]/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="bg-white text-gray-900 p-7 sm:p-9 rounded-3xl shadow-2xl max-w-md w-full border border-[#c6a96b]/30 relative z-10">
+        <div className="text-center mb-6">
+          <div className="w-14 h-14 rounded-2xl bg-[#1a0e0d] border-2 border-[#c6a96b] flex items-center justify-center mx-auto mb-4 text-[#c6a96b] shadow-md">
+            {isClaiming ? <Gift className="w-7 h-7" /> : <Sparkles className="w-7 h-7" />}
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1a0e0d] font-serif mb-1.5">
+            {isClaiming ? "Guardar mis Puntos" : "Bienvenido a Mandorla"}
+          </h1>
+          <p className="text-xs sm:text-sm text-gray-600">
+            {isClaiming
+              ? "Identifícate con 1 clic para acreditar tus puntos de compra de inmediato."
+              : "Ingresa para consultar tu saldo acumulado y canjear premios."}
           </p>
         </div>
 
-        {success ? (
-          <div className="bg-green-50 text-green-800 p-4 rounded-xl text-center font-medium border border-green-200 text-sm sm:text-base">
-            ¡Correo enviado! Revisa tu email y haz clic en el enlace mágico para continuar.
-          </div>
-        ) : (
-          <form action={loginWithEmail} className="space-y-4">
-            <input type="hidden" name="return_to" value={returnTo} />
-            
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Correo Electrónico
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="tu@correo.com"
-                required
-                className="w-full px-4 py-4 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all text-base"
-              />
-            </div>
-
-            {message && (
-              <p className="text-red-500 text-sm text-center font-medium bg-red-50 p-2 rounded-lg">
-                {message}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg shadow-md transition-all active:scale-[0.98] text-lg"
-            >
-              Enviar Enlace Mágico
-            </button>
-          </form>
-        )}
+        <LoginForm returnTo={returnTo} initialMessage={message} />
       </div>
     </div>
   );
