@@ -45,6 +45,26 @@ export default async function CanjesPage() {
     .eq("is_active", true)
     .order("points_required", { ascending: true });
 
+  // Consultar categorías (niveles)
+  const { data: categories } = await supabase
+    .from("reward_categories")
+    .select("*")
+    .order("min_points", { ascending: true });
+
+  // Calcular si está muy cerca (a un 30% o menos) de llegar al próximo nivel
+  let nextLevelName: string | null = null;
+  if (user && categories && categories.length > 0) {
+    const nextLevel = categories.find((c) => currentBalance < c.min_points);
+    if (nextLevel) {
+      // Falta un 30% o menos para alcanzar los puntos del nivel
+      const pointsNeeded = nextLevel.min_points - currentBalance;
+      const thirtyPercentOfTarget = nextLevel.min_points * 0.3;
+      if (pointsNeeded <= thirtyPercentOfTarget) {
+        nextLevelName = nextLevel.name;
+      }
+    }
+  }
+
   // Formatear items para el componente interactivo
   const productsList: CanjeProductItem[] =
     dbProducts && dbProducts.length > 0
@@ -130,6 +150,11 @@ export default async function CanjesPage() {
                 Acumulados: <strong className="text-[#f5efe6]">{totalPoints}</strong> | Canjeados:{" "}
                 <strong className="text-[#f5efe6]">{redeemedPoints}</strong>
               </p>
+              {nextLevelName && (
+                <div className="mt-4 inline-block bg-[#c6a96b]/20 border border-[#c6a96b]/40 text-[#c6a96b] px-4 py-2 rounded-xl text-sm font-semibold animate-pulse shadow-lg">
+                  🎉 ¡Estás muy cerca de llegar al nivel {nextLevelName}!
+                </div>
+              )}
             </div>
           ) : (
             <div>
