@@ -31,6 +31,12 @@ export default async function ProductosCanjePage() {
     .select("*")
     .order("created_at", { ascending: false });
 
+  // Cargar categorías
+  const { data: categories } = await supabase
+    .from("reward_categories")
+    .select("*")
+    .order("min_points", { ascending: true });
+
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div>
@@ -40,7 +46,7 @@ export default async function ProductosCanjePage() {
         </p>
       </div>
 
-      <RedemptionProductsManager initialProducts={products || []} />
+      <RedemptionProductsManager initialProducts={products || []} categories={categories || []} />
     </div>
   );
 }

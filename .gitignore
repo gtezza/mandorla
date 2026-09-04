@@ -38,3 +38,9 @@ data/temp_*.sql
 # Documentos locales que no se suben
 docs/propuestas_login_seguros.md
 docs/railway_evolution_api.md
+
+# Scripts de prueba y conexión de base de datos
+*run_pg*
+*test_direct_db*
+*.cjs
+js/fidelidad-app/supabase/

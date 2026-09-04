@@ -14,9 +14,10 @@ import {
   Tag,
   Eye,
   Power,
-  Sparkles,
   Upload,
   X,
+  Layers,
+  Sparkles,
 } from "lucide-react";
 import { createRedemptionProduct, updateRedemptionProduct, toggleProductStatus } from "./actions";
 
@@ -34,10 +35,19 @@ export interface RedemptionProduct {
   updated_at?: string;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+  min_points: number;
+  color_theme: string;
+}
+
 export default function RedemptionProductsManager({
   initialProducts,
+  categories = [],
 }: {
   initialProducts: RedemptionProduct[];
+  categories?: Category[];
 }) {
   const [products, setProducts] = useState<RedemptionProduct[]>(initialProducts);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
@@ -46,6 +56,27 @@ export default function RedemptionProductsManager({
   const [isCreatingNew, setIsCreatingNew] = useState<boolean>(initialProducts.length === 0);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filterStatus, setFilterStatus] = useState<"all" | "active" | "inactive">("all");
+
+  const getCategoryForPoints = (points: number) => {
+    if (!categories || categories.length === 0) return null;
+    let matchedCategory = categories[0];
+    for (const cat of categories) {
+      if (points >= cat.min_points) matchedCategory = cat;
+      else break;
+    }
+    return matchedCategory;
+  };
+
+  const getThemeClasses = (color: string) => {
+    const themes: Record<string, string> = {
+      gray: "bg-gray-100 text-gray-800 border-gray-200",
+      blue: "bg-blue-100 text-blue-800 border-blue-200",
+      green: "bg-green-100 text-green-800 border-green-200",
+      yellow: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      purple: "bg-purple-100 text-purple-800 border-purple-200",
+    };
+    return themes[color] || themes.gray;
+  };
 
   // Estado del formulario (para nuevo o edición)
   const [formData, setFormData] = useState<{
@@ -359,8 +390,18 @@ export default function RedemptionProductsManager({
 
                       <h3 className="font-bold text-gray-900 text-sm truncate">{product.title}</h3>
 
-                      {/* Esquema de Puntos + $ Dinero */}
-                      <div className="flex items-center gap-2 mt-1 text-xs">
+                      {/* Esquema de Puntos + $ Dinero + Categoría */}
+                      <div className="flex items-center gap-2 mt-1 text-xs flex-wrap">
+                        {(() => {
+                          const cat = getCategoryForPoints(product.points_required);
+                          if (!cat) return null;
+                          return (
+                            <span className={`font-bold px-2 py-0.5 rounded border ${getThemeClasses(cat.color_theme)} flex items-center gap-1`}>
+                              <Layers className="w-3 h-3" />
+                              {cat.name}
+                            </span>
+                          );
+                        })()}
                         <span className="font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded">
                           {product.points_required} pts
                         </span>
@@ -669,18 +710,30 @@ export default function RedemptionProductsManager({
             </div>
           </div>
 
-          {/* Resumen del Valor del Canje */}
+          {/* Resumen del Valor del Canje y Categoría */}
           <div className="bg-gray-100 p-4 rounded-xl flex items-center justify-between text-xs">
             <span className="text-gray-600 font-medium">Esquema para el cliente:</span>
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-sm text-blue-900">
-                {formData.points_required} Puntos
-              </span>
-              {formData.additional_money > 0 && (
-                <span className="font-extrabold text-sm text-amber-800">
-                  + ${Number(formData.additional_money).toLocaleString("es-AR")}
+            <div className="flex items-center gap-3">
+              {(() => {
+                const cat = getCategoryForPoints(formData.points_required);
+                if (!cat) return null;
+                return (
+                  <span className={`font-bold text-xs px-2.5 py-1 rounded-md border ${getThemeClasses(cat.color_theme)} flex items-center gap-1 shadow-sm`}>
+                    <Layers className="w-3.5 h-3.5" />
+                    Nivel {cat.name}
+                  </span>
+                );
+              })()}
+              <div className="flex items-center gap-1">
+                <span className="font-extrabold text-sm text-blue-900">
+                  {formData.points_required} pts
                 </span>
-              )}
+                {formData.additional_money > 0 && (
+                  <span className="font-extrabold text-sm text-amber-800">
+                    + ${Number(formData.additional_money).toLocaleString("es-AR")}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

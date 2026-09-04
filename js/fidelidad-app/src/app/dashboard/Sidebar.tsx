@@ -10,7 +10,8 @@ import {
   Wallet,
   Gift,
   HelpCircle,
-  LineChart
+  LineChart,
+  Layers
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -40,6 +41,10 @@ export default function Sidebar() {
       <Link href="/dashboard/clientes" className={getLinkClass("/dashboard/clientes")}>
         <Users className="w-5 h-5" />
         Clientes
+      </Link>
+      <Link href="/dashboard/categorias-premios" className={getLinkClass("/dashboard/categorias-premios")}>
+        <Layers className="w-5 h-5 text-purple-600" />
+        Categorías de Premios
       </Link>
       <Link href="/dashboard/productos-canje" className={getLinkClass("/dashboard/productos-canje")}>
         <Gift className="w-5 h-5 text-blue-600" />
