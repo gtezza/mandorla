@@ -34,8 +34,8 @@ export default async function PresupuestoPage() {
   return (
     <div className="p-8 max-w-4xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Presupuesto de Puntos</h1>
-        <p className="text-gray-500 mt-2">Configura la cantidad máxima de puntos a distribuir en la plataforma.</p>
+        <h1 className="text-3xl font-bold text-[#f5efe6] font-serif">Presupuesto de Puntos</h1>
+        <p className="text-[#f5efe6]/60 mt-2">Configura la cantidad máxima de puntos a distribuir en la plataforma.</p>
       </div>
 
       <BudgetManager currentBudget={activeBudget} />

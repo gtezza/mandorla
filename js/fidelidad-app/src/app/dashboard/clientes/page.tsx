@@ -75,8 +75,8 @@ export default async function ClientesPage() {
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Directorio de Clientes</h1>
-        <p className="text-gray-500 mt-2">
+        <h1 className="text-3xl font-bold text-[#f5efe6] font-serif">Directorio de Clientes</h1>
+        <p className="text-[#f5efe6]/60 mt-2">
           Gestiona el saldo, historial y canje de productos en mostrador con cálculo en tiempo real.
         </p>
       </div>

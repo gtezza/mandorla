@@ -131,11 +131,11 @@ export default function ClientManager({
       {/* Buscador */}
       <div className="relative max-w-md">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
+          <Search className="h-5 w-5 text-[#f5efe6]/40" />
         </div>
         <input
           type="text"
-          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors"
+          className="block w-full pl-10 pr-3 py-2 border border-[#c6a96b]/40 rounded-lg leading-5 bg-[#2a1a18] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#c6a96b] focus:border-[#c6a96b] sm:text-sm transition-colors"
           placeholder="Buscar por nombre, teléfono o email..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -143,9 +143,9 @@ export default function ClientManager({
       </div>
 
       {/* Lista de Clientes */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <table className="w-full text-left text-sm text-gray-600">
-          <thead className="bg-gray-50 border-b border-gray-100 text-gray-700 font-semibold">
+      <div className="bg-[#2a1a18] rounded-xl shadow-sm border border-[#c6a96b]/20 overflow-hidden">
+        <table className="w-full text-left text-sm text-[#f5efe6]/70">
+          <thead className="bg-[#1a0e0d] border-b border-[#c6a96b]/20 text-[#f5efe6]/80 font-semibold">
             <tr>
               <th className="px-6 py-4">Cliente</th>
               <th className="px-6 py-4">Contacto</th>
@@ -156,20 +156,20 @@ export default function ClientManager({
           <tbody className="divide-y divide-gray-50">
             {filteredClients.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-6 py-8 text-center text-gray-400">
+                <td colSpan={4} className="px-6 py-8 text-center text-[#f5efe6]/40">
                   No se encontraron clientes.
                 </td>
               </tr>
             ) : (
               filteredClients.map((client) => (
-                <tr key={client.id} className="hover:bg-blue-50/50 transition-colors">
+                <tr key={client.id} className="hover:bg-[#c6a96b]/5 transition-colors">
                   <td className="px-6 py-4">
-                    <div className="font-bold text-gray-900">{client.full_name}</div>
-                    <div className="text-xs text-gray-500">{client.email}</div>
+                    <div className="font-bold text-[#f5efe6] font-serif">{client.full_name}</div>
+                    <div className="text-xs text-[#f5efe6]/60">{client.email}</div>
                   </td>
-                  <td className="px-6 py-4 font-medium text-gray-700">{client.phone}</td>
+                  <td className="px-6 py-4 font-medium text-[#f5efe6]/80">{client.phone}</td>
                   <td className="px-6 py-4 text-right">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-bold bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-bold bg-[#c6a96b]/20 text-[#c6a96b]">
                       {client.balance} pts
                     </span>
                   </td>
@@ -178,21 +178,21 @@ export default function ClientManager({
                       <button
                         onClick={() => openHistoryModal(client, "earned")}
                         title="Ver detalle de obtención de puntos"
-                        className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg transition-colors border border-green-200"
+                        className="p-1.5 text-green-600 hover:bg-green-900/30 rounded-lg transition-colors border border-green-200"
                       >
                         <ArrowDownLeft className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => openHistoryModal(client, "redeemed")}
                         title="Ver detalle de canjes realizados"
-                        className="p-1.5 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors border border-purple-200"
+                        className="p-1.5 text-purple-600 hover:bg-purple-900/30 rounded-lg transition-colors border border-purple-200"
                       >
                         <Clock className="w-4 h-4" />
                       </button>
                       <button
                         title="Enviar WhatsApp (Próximamente)"
                         disabled
-                        className="p-1.5 text-emerald-600 bg-gray-50 opacity-40 cursor-not-allowed rounded-lg border border-gray-200"
+                        className="p-1.5 text-emerald-600 bg-[#1a0e0d] opacity-40 cursor-not-allowed rounded-lg border border-[#c6a96b]/30"
                       >
                         <MessageCircle className="w-4 h-4" />
                       </button>
@@ -221,7 +221,7 @@ export default function ClientManager({
             {/* Botón Cerrar */}
             <button
               onClick={() => setRedeemModalOpen(false)}
-              className="absolute top-5 right-5 text-gray-400 hover:text-[#c6a96b] transition-colors p-1"
+              className="absolute top-5 right-5 text-[#f5efe6]/40 hover:text-[#c6a96b] transition-colors p-1"
             >
               <X className="w-6 h-6" />
             </button>
@@ -415,17 +415,17 @@ export default function ClientManager({
       {/* Modal: Historial de Puntos */}
       {historyModalOpen && selectedClient && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6 relative max-h-[80vh] flex flex-col">
+          <div className="bg-[#2a1a18] rounded-2xl shadow-xl max-w-2xl w-full p-6 relative max-h-[80vh] flex flex-col">
             <button
               onClick={() => setHistoryModalOpen(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-900"
+              className="absolute top-4 right-4 text-[#f5efe6]/40 hover:text-[#f5efe6] font-serif"
             >
               <X className="w-6 h-6" />
             </button>
-            <h3 className="text-xl font-bold text-gray-900 mb-1">
+            <h3 className="text-xl font-bold text-[#f5efe6] font-serif mb-1">
               {historyModalOpen === "earned" ? "Detalle de Obtención" : "Detalle de Canjes"}
             </h3>
-            <p className="text-sm text-gray-500 pb-4 border-b border-gray-100">
+            <p className="text-sm text-[#f5efe6]/60 pb-4 border-b border-[#c6a96b]/20">
               {selectedClient.full_name}
             </p>
 
@@ -436,19 +436,19 @@ export default function ClientManager({
                 );
 
                 if (displayedHistory.length === 0) {
-                  return <p className="text-gray-500 text-center py-4">No hay registros de este tipo.</p>;
+                  return <p className="text-[#f5efe6]/60 text-center py-4">No hay registros de este tipo.</p>;
                 }
 
                 return displayedHistory.map((tx) => (
                   <div
                     key={tx.id}
-                    className="flex justify-between items-center p-3 rounded-lg border border-gray-100 bg-gray-50"
+                    className="flex justify-between items-center p-3 rounded-lg border border-[#c6a96b]/20 bg-[#1a0e0d]"
                   >
                     <div>
-                      <p className="font-semibold text-gray-900 text-sm">
+                      <p className="font-semibold text-[#f5efe6] font-serif text-sm">
                         {tx.description || "Movimiento general"}
                       </p>
-                      <p className="text-xs text-gray-400">{new Date(tx.date).toLocaleString("es-AR")}</p>
+                      <p className="text-xs text-[#f5efe6]/40">{new Date(tx.date).toLocaleString("es-AR")}</p>
                     </div>
                     <div className={`font-black ${tx.amount > 0 ? "text-green-600" : "text-red-600"}`}>
                       {tx.amount > 0 ? "+" : ""}

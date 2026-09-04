@@ -79,8 +79,8 @@ export default function SegmentacionClientes({
       count: inactiveZeroCustomers.length,
       icon: UserX,
       color: "gray",
-      bgBadge: "bg-gray-100 text-gray-800",
-      borderActive: "border-gray-500 ring-2 ring-gray-200",
+      bgBadge: "bg-[#1a0e0d] border border-[#c6a96b]/10 text-[#f5efe6]",
+      borderActive: "border-[#c6a96b]/100 ring-2 ring-gray-200",
       data: inactiveZeroCustomers,
     },
   ];
@@ -90,21 +90,21 @@ export default function SegmentacionClientes({
   return (
     <div className="space-y-6">
       {/* Distribución de Saldos de Clientes */}
-      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-        <h3 className="text-base font-bold text-gray-900 mb-1">
+      <div className="bg-[#2a1a18] p-6 rounded-2xl border border-[#c6a96b]/20 shadow-sm">
+        <h3 className="text-base font-bold text-[#f5efe6] font-serif mb-1">
           📊 Distribución de Clientes por Rango de Saldo
         </h3>
-        <p className="text-xs text-gray-500 mb-5">
+        <p className="text-xs text-[#f5efe6]/60 mb-5">
           Muestra cuántos clientes acumulan puntos actualmente y en qué rangos se ubican.
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {balanceRanges.map((range, idx) => (
-            <div key={idx} className="p-4 rounded-xl bg-gray-50 border border-gray-100 flex flex-col justify-between">
-              <span className="text-xs font-semibold text-gray-600">{range.label}</span>
+            <div key={idx} className="p-4 rounded-xl bg-[#1a0e0d] border border-[#c6a96b]/20 flex flex-col justify-between">
+              <span className="text-xs font-semibold text-[#f5efe6]/70">{range.label}</span>
               <div className="mt-2">
-                <span className="text-2xl font-black text-gray-900">{range.count}</span>
-                <span className="text-xs text-gray-500 ml-1.5 font-medium">({range.percentage.toFixed(0)}%)</span>
+                <span className="text-2xl font-black text-[#f5efe6] font-serif">{range.count}</span>
+                <span className="text-xs text-[#f5efe6]/60 ml-1.5 font-medium">({range.percentage.toFixed(0)}%)</span>
               </div>
               <div className="w-full bg-gray-200 h-1.5 rounded-full mt-3 overflow-hidden">
                 <div
@@ -118,12 +118,12 @@ export default function SegmentacionClientes({
       </div>
 
       {/* Segmentación RFM y Comportamiento */}
-      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+      <div className="bg-[#2a1a18] p-6 rounded-2xl border border-[#c6a96b]/20 shadow-sm">
         <div className="mb-5">
-          <h3 className="text-base font-bold text-gray-900">
+          <h3 className="text-base font-bold text-[#f5efe6] font-serif">
             👥 Segmentación y Retención de Clientes
           </h3>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-[#f5efe6]/60">
             Selecciona un segmento para ver el detalle de los clientes que lo componen.
           </p>
         </div>
@@ -140,8 +140,8 @@ export default function SegmentacionClientes({
                 type="button"
                 className={`p-4 rounded-xl border text-left transition-all relative flex flex-col justify-between ${
                   isSelected
-                    ? `${seg.borderActive} bg-white shadow-sm`
-                    : "border-gray-200 bg-gray-50 hover:bg-white hover:border-gray-300"
+                    ? `${seg.borderActive} bg-[#2a1a18] shadow-sm`
+                    : "border-[#c6a96b]/30 bg-[#1a0e0d] hover:bg-[#2a1a18] hover:border-[#c6a96b]/40"
                 }`}
               >
                 <div>
@@ -149,13 +149,13 @@ export default function SegmentacionClientes({
                     <div className={`p-2 rounded-lg ${seg.bgBadge}`}>
                       <Icon className="w-4 h-4" />
                     </div>
-                    <span className="text-xl font-bold text-gray-900">{seg.count}</span>
+                    <span className="text-xl font-bold text-[#f5efe6] font-serif">{seg.count}</span>
                   </div>
-                  <h4 className="mt-3 text-sm font-bold text-gray-900">{seg.title}</h4>
-                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{seg.subtitle}</p>
+                  <h4 className="mt-3 text-sm font-bold text-[#f5efe6] font-serif">{seg.title}</h4>
+                  <p className="text-xs text-[#f5efe6]/60 mt-0.5 leading-relaxed">{seg.subtitle}</p>
                 </div>
                 {isSelected && (
-                  <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-blue-600">
+                  <div className="mt-3 flex items-center gap-1 text-xs font-semibold text-[#c6a96b]">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>Seleccionado</span>
                   </div>
@@ -166,15 +166,15 @@ export default function SegmentacionClientes({
         </div>
 
         {/* Tabla / Lista de Clientes del Segmento Seleccionado */}
-        <div className="mt-6 border border-gray-100 rounded-xl overflow-hidden">
-          <div className="bg-gray-50 px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-600">
+        <div className="mt-6 border border-[#c6a96b]/20 rounded-xl overflow-hidden">
+          <div className="bg-[#1a0e0d] px-4 py-3 border-b border-[#c6a96b]/20 flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#f5efe6]/70">
               Listado de {currentSegment.title} ({currentSegment.count})
             </span>
           </div>
 
           {currentSegment.data.length === 0 ? (
-            <div className="p-8 text-center text-sm text-gray-500">
+            <div className="p-8 text-center text-sm text-[#f5efe6]/60">
               No hay clientes en este segmento actualmente.
             </div>
           ) : (
@@ -182,32 +182,32 @@ export default function SegmentacionClientes({
               {currentSegment.data.map((c) => (
                 <div
                   key={c.id}
-                  className="px-4 py-3 hover:bg-gray-50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                  className="px-4 py-3 hover:bg-[#1a0e0d] transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-2"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 truncate">
+                    <p className="text-sm font-semibold text-[#f5efe6] font-serif truncate">
                       {c.full_name || "Sin nombre registrado"}
                     </p>
-                    <p className="text-xs text-gray-500 truncate">
+                    <p className="text-xs text-[#f5efe6]/60 truncate">
                       {c.email || c.phone || "Sin contacto"}
                     </p>
                   </div>
 
                   <div className="flex items-center gap-4 text-xs">
                     <div className="text-right">
-                      <span className="text-gray-500 block">Saldo Actual</span>
-                      <span className="font-bold text-blue-600">{c.balance} pts</span>
+                      <span className="text-[#f5efe6]/60 block">Saldo Actual</span>
+                      <span className="font-bold text-[#c6a96b]">{c.balance} pts</span>
                     </div>
 
                     <div className="text-right">
-                      <span className="text-gray-500 block">Total Sumado</span>
+                      <span className="text-[#f5efe6]/60 block">Total Sumado</span>
                       <span className="font-semibold text-emerald-600">+{c.earned}</span>
                     </div>
 
                     {c.daysSinceLastActivity !== null ? (
                       <div className="text-right hidden sm:block">
-                        <span className="text-gray-500 block">Última Actividad</span>
-                        <span className="font-medium text-gray-700">
+                        <span className="text-[#f5efe6]/60 block">Última Actividad</span>
+                        <span className="font-medium text-[#f5efe6]/80">
                           {c.daysSinceLastActivity === 0
                             ? "Hoy"
                             : `Hace ${c.daysSinceLastActivity} d`}
@@ -215,8 +215,8 @@ export default function SegmentacionClientes({
                       </div>
                     ) : (
                       <div className="text-right hidden sm:block">
-                        <span className="text-gray-500 block">Registrado</span>
-                        <span className="font-medium text-gray-700">
+                        <span className="text-[#f5efe6]/60 block">Registrado</span>
+                        <span className="font-medium text-[#f5efe6]/80">
                           {c.daysSinceRegistered === 0
                             ? "Hoy"
                             : `Hace ${c.daysSinceRegistered} d`}

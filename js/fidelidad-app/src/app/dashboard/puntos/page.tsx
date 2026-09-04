@@ -31,8 +31,8 @@ export default async function PuntosDePromocionPage() {
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Puntos de Promoción</h1>
-        <p className="text-gray-500 mt-2">Administra las sucursales y genera sus códigos QR correspondientes.</p>
+        <h1 className="text-3xl font-bold text-[#f5efe6] font-serif">Puntos de Promoción</h1>
+        <p className="text-[#f5efe6]/60 mt-2">Administra las sucursales y genera sus códigos QR correspondientes.</p>
       </div>
 
       <PuntosManager initialPuntos={puntos || []} />

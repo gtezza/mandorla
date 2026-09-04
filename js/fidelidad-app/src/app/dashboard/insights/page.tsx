@@ -163,13 +163,13 @@ export default async function InsightsPage() {
       label: "1 a 50 pts",
       count: range1_50,
       percentage: totalCustomers > 0 ? (range1_50 / totalCustomers) * 100 : 0,
-      color: "bg-blue-500",
+      color: "bg-[#c6a96b]/100",
     },
     {
       label: "51 a 150 pts",
       count: range51_150,
       percentage: totalCustomers > 0 ? (range51_150 / totalCustomers) * 100 : 0,
-      color: "bg-indigo-500",
+      color: "bg-indigo-900/300",
     },
     {
       label: "+150 pts (Alto)",
@@ -288,14 +288,14 @@ export default async function InsightsPage() {
       {/* Encabezado */}
       <div>
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-indigo-50 text-indigo-700 rounded-xl">
+          <div className="p-2 bg-indigo-900/30 text-indigo-700 rounded-xl">
             <LineChart className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-black tracking-tight text-gray-900">
+            <h1 className="text-2xl font-black tracking-tight text-[#f5efe6] font-serif">
               Insights & Reportes de Fidelización
             </h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-[#f5efe6]/60">
               Análisis avanzado de retención de clientes, rendimiento de canjes y puntos de promoción.
             </p>
           </div>
