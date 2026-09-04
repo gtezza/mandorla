@@ -18,7 +18,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Mandorla - Dashboard",
+  title: "FidelIA",
   description: "Fidelidad y Recompensas",
 };
 
