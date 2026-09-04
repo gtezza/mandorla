@@ -163,8 +163,8 @@ export default async function DashboardPage() {
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Resumen General</h1>
-        <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+        <h1 className="text-3xl font-bold text-[#c6a96b] font-serif tracking-wide">Resumen General</h1>
+        <span className="bg-[#1a0e0d] border border-[#c6a96b]/30 text-[#c6a96b] text-sm font-medium px-3 py-1 rounded-full shadow-sm">
           Actualizado al instante
         </span>
       </div>
@@ -172,87 +172,87 @@ export default async function DashboardPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Card Presupuesto / Bolsa */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col relative overflow-hidden">
+        <div className="bg-[#2a1a18] rounded-xl shadow-xl border border-[#c6a96b]/20 p-6 flex flex-col relative overflow-hidden transition-all hover:border-[#c6a96b]/40">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-gray-500 font-medium">Bolsa de Puntos</h3>
-            <div className="p-2 bg-purple-50 rounded-lg">
-              <Activity className="w-5 h-5 text-purple-600" />
+            <h3 className="text-[#f5efe6]/70 font-medium">Bolsa de Puntos</h3>
+            <div className="p-2 bg-purple-900/30 rounded-lg border border-purple-500/20">
+              <Activity className="w-5 h-5 text-purple-400" />
             </div>
           </div>
           
           {hasBudget ? (
             <>
-              <p className="text-4xl font-bold text-gray-900 mb-2">{budgetDistributed}</p>
-              <div className="flex items-center justify-between text-sm text-gray-500">
+              <p className="text-4xl font-bold text-[#f5efe6] mb-2 font-serif">{budgetDistributed}</p>
+              <div className="flex items-center justify-between text-sm text-[#f5efe6]/50">
                 <span>entregados</span>
-                <span className="font-semibold text-gray-900">{budgetLabel}</span>
+                <span className="font-semibold text-[#c6a96b]">{budgetLabel}</span>
               </div>
               
               {budgetRemaining !== null && (
-                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                  <span className="text-sm font-medium text-gray-500">Saldo Restante</span>
-                  <span className={`text-lg font-bold ${budgetRemaining <= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                <div className="mt-4 pt-4 border-t border-[#c6a96b]/10 flex justify-between items-center">
+                  <span className="text-sm font-medium text-[#f5efe6]/70">Saldo Restante</span>
+                  <span className={`text-lg font-bold ${budgetRemaining <= 0 ? 'text-red-400' : 'text-green-400'}`}>
                     {budgetRemaining}
                   </span>
                 </div>
               )}
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full text-gray-400">
+            <div className="flex flex-col items-center justify-center h-full text-[#f5efe6]/40">
               <span className="text-sm">Sin presupuesto activo</span>
             </div>
           )}
         </div>
 
         {/* Card Hoy */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col relative overflow-hidden">
+        <div className="bg-[#2a1a18] rounded-xl shadow-xl border border-[#c6a96b]/20 p-6 flex flex-col relative overflow-hidden transition-all hover:border-[#c6a96b]/40">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-gray-500 font-medium">Puntos Entregados (Hoy)</h3>
-            <div className="p-2 bg-blue-50 rounded-lg">
-              <Activity className="w-5 h-5 text-blue-600" />
+            <h3 className="text-[#f5efe6]/70 font-medium">Puntos Entregados (Hoy)</h3>
+            <div className="p-2 bg-[#c6a96b]/20 rounded-lg border border-[#c6a96b]/30">
+              <Activity className="w-5 h-5 text-[#c6a96b]" />
             </div>
           </div>
-          <p className="text-4xl font-bold text-gray-900 mb-2">{pointsToday}</p>
+          <p className="text-4xl font-bold text-[#f5efe6] mb-2 font-serif">{pointsToday}</p>
           
           <div className="flex items-center gap-2">
-            <span className={`flex items-center text-sm font-semibold ${diffDaily >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <span className={`flex items-center text-sm font-semibold ${diffDaily >= 0 ? 'text-green-400' : 'text-red-400'}`}>
               {diffDaily >= 0 ? <ArrowUpRight className="w-4 h-4 mr-1" /> : <ArrowDownRight className="w-4 h-4 mr-1" />}
               {Math.abs(diffDaily)}%
             </span>
-            <span className="text-sm text-gray-400">vs ayer ({pointsYesterday})</span>
+            <span className="text-sm text-[#f5efe6]/50">vs ayer ({pointsYesterday})</span>
           </div>
         </div>
 
         {/* Card Mes */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col relative overflow-hidden">
+        <div className="bg-[#2a1a18] rounded-xl shadow-xl border border-[#c6a96b]/20 p-6 flex flex-col relative overflow-hidden transition-all hover:border-[#c6a96b]/40">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-gray-500 font-medium">Puntos Entregados (Mes)</h3>
-            <div className="p-2 bg-indigo-50 rounded-lg">
-              <Activity className="w-5 h-5 text-indigo-600" />
+            <h3 className="text-[#f5efe6]/70 font-medium">Puntos Entregados (Mes)</h3>
+            <div className="p-2 bg-indigo-900/30 rounded-lg border border-indigo-500/20">
+              <Activity className="w-5 h-5 text-indigo-400" />
             </div>
           </div>
-          <p className="text-4xl font-bold text-gray-900 mb-2">{pointsThisMonth}</p>
+          <p className="text-4xl font-bold text-[#f5efe6] mb-2 font-serif">{pointsThisMonth}</p>
           
           <div className="flex items-center gap-2">
-            <span className={`flex items-center text-sm font-semibold ${diffMonthly >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <span className={`flex items-center text-sm font-semibold ${diffMonthly >= 0 ? 'text-green-400' : 'text-red-400'}`}>
               {diffMonthly >= 0 ? <ArrowUpRight className="w-4 h-4 mr-1" /> : <ArrowDownRight className="w-4 h-4 mr-1" />}
               {Math.abs(diffMonthly)}%
             </span>
-            <span className="text-sm text-gray-400">vs mes anterior ({pointsLastMonth})</span>
+            <span className="text-sm text-[#f5efe6]/50">vs mes anterior ({pointsLastMonth})</span>
           </div>
         </div>
 
         {/* Card Clientes */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col relative overflow-hidden">
+        <div className="bg-[#2a1a18] rounded-xl shadow-xl border border-[#c6a96b]/20 p-6 flex flex-col relative overflow-hidden transition-all hover:border-[#c6a96b]/40">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-gray-500 font-medium">Total de Clientes</h3>
-            <div className="p-2 bg-orange-50 rounded-lg">
-              <Users className="w-5 h-5 text-orange-600" />
+            <h3 className="text-[#f5efe6]/70 font-medium">Total de Clientes</h3>
+            <div className="p-2 bg-orange-900/30 rounded-lg border border-orange-500/20">
+              <Users className="w-5 h-5 text-orange-400" />
             </div>
           </div>
-          <p className="text-4xl font-bold text-gray-900 mb-2">{(profiles || []).length}</p>
+          <p className="text-4xl font-bold text-[#f5efe6] mb-2 font-serif">{(profiles || []).length}</p>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400">Registrados en la plataforma</span>
+            <span className="text-sm text-[#f5efe6]/50">Registrados en la plataforma</span>
           </div>
         </div>
       </div>
