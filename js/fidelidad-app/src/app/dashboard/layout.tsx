@@ -14,9 +14,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen bg-[#1a0e0d] font-sans text-[#f5efe6] selection:bg-[#c6a96b] selection:text-[#1a0e0d]">
+    <div className="flex h-screen print:h-auto bg-[#1a0e0d] print:bg-white font-sans text-[#f5efe6] print:text-black selection:bg-[#c6a96b] selection:text-[#1a0e0d]">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#2a1a18] border-r border-[#c6a96b]/20 flex flex-col shadow-2xl z-10">
+      <aside className="w-64 bg-[#2a1a18] border-r border-[#c6a96b]/20 flex flex-col shadow-2xl z-10 print:hidden">
         <div className="h-16 flex items-center px-6 border-b border-[#c6a96b]/10">
           <span className="text-xl font-bold text-[#c6a96b] font-serif tracking-widest">MANDORLA</span>
         </div>
@@ -34,7 +34,7 @@ export default function DashboardLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto print:overflow-visible">
         {children}
       </main>
     </div>
