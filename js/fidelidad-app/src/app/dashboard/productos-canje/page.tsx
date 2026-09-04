@@ -40,8 +40,8 @@ export default async function ProductosCanjePage() {
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Productos de Canje</h1>
-        <p className="text-gray-500 mt-2">
+        <h1 className="text-3xl font-bold text-[#c6a96b] font-serif tracking-wide">Productos de Canje</h1>
+        <p className="text-[#f5efe6]/70 mt-2">
           Gestiona el catálogo de premios y recompensas disponibles para los clientes, definiendo SKU, puntos requeridos, dinero adicional y fechas de vencimiento.
         </p>
       </div>

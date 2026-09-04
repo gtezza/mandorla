@@ -24,8 +24,8 @@ export default function Sidebar() {
       : pathname.startsWith(path);
       
     return isActive
-      ? "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg bg-blue-50 text-blue-700 font-semibold"
-      : "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors";
+      ? "flex items-center gap-3 px-3 py-2 text-sm font-semibold rounded-lg bg-[#c6a96b]/15 text-[#c6a96b] border border-[#c6a96b]/30 shadow-[0_0_15px_rgba(198,169,107,0.1)] transition-all"
+      : "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-[#f5efe6]/70 hover:bg-[#c6a96b]/10 hover:text-[#f5efe6] transition-colors";
   };
 
   return (
@@ -35,7 +35,7 @@ export default function Sidebar() {
         Métricas
       </Link>
       <Link href="/dashboard/insights" className={getLinkClass("/dashboard/insights")}>
-        <LineChart className="w-5 h-5 text-indigo-600" />
+        <LineChart className="w-5 h-5" />
         Insights
       </Link>
       <Link href="/dashboard/clientes" className={getLinkClass("/dashboard/clientes")}>
@@ -43,11 +43,11 @@ export default function Sidebar() {
         Clientes
       </Link>
       <Link href="/dashboard/categorias-premios" className={getLinkClass("/dashboard/categorias-premios")}>
-        <Layers className="w-5 h-5 text-purple-600" />
+        <Layers className="w-5 h-5" />
         Categorías de Premios
       </Link>
       <Link href="/dashboard/productos-canje" className={getLinkClass("/dashboard/productos-canje")}>
-        <Gift className="w-5 h-5 text-blue-600" />
+        <Gift className="w-5 h-5" />
         Productos de Canje
       </Link>
       <Link href="/dashboard/puntos" className={getLinkClass("/dashboard/puntos")}>

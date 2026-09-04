@@ -69,11 +69,11 @@ export default function RedemptionProductsManager({
 
   const getThemeClasses = (color: string) => {
     const themes: Record<string, string> = {
-      gray: "bg-gray-100 text-gray-800 border-gray-200",
-      blue: "bg-blue-100 text-blue-800 border-blue-200",
-      green: "bg-green-100 text-green-800 border-green-200",
-      yellow: "bg-yellow-100 text-yellow-800 border-yellow-200",
-      purple: "bg-purple-100 text-purple-800 border-purple-200",
+      gray: "bg-gray-800/60 text-gray-300 border-gray-600/50",
+      blue: "bg-blue-900/40 text-blue-300 border-blue-800/50",
+      green: "bg-emerald-900/40 text-emerald-300 border-emerald-800/50",
+      yellow: "bg-[#c6a96b]/20 text-[#c6a96b] border-[#c6a96b]/40",
+      purple: "bg-purple-900/40 text-purple-300 border-purple-800/50",
     };
     return themes[color] || themes.gray;
   };
@@ -267,20 +267,20 @@ export default function RedemptionProductsManager({
       {/* ─────────────────────────────────────────────────────────────
           COLUMNA MASTER (Izquierda): Listado y Filtros (5 cols)
       ───────────────────────────────────────────────────────────── */}
-      <div className="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-[750px]">
+      <div className="lg:col-span-5 bg-[#2a1a18] rounded-2xl shadow-xl border border-[#c6a96b]/20 overflow-hidden flex flex-col h-[750px]">
         {/* Cabecera Master */}
-        <div className="p-5 border-b border-gray-100 space-y-3.5 bg-gray-50/70">
+        <div className="p-5 border-b border-[#c6a96b]/10 space-y-3.5 bg-[#1a0e0d]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Gift className="w-5 h-5 text-blue-600" />
-              <h2 className="font-bold text-gray-900 text-lg">Catálogo ({filteredProducts.length})</h2>
+              <Gift className="w-5 h-5 text-[#c6a96b]" />
+              <h2 className="font-bold text-[#f5efe6] text-lg font-serif">Catálogo ({filteredProducts.length})</h2>
             </div>
             <button
               onClick={handleStartCreate}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 isCreatingNew
-                  ? "bg-blue-700 text-white shadow"
-                  : "bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                  ? "bg-[#c6a96b] text-[#1a0e0d] shadow"
+                  : "bg-[#1a0e0d] border border-[#c6a96b]/50 text-[#c6a96b] hover:bg-[#c6a96b]/10 shadow-sm"
               }`}
             >
               <Plus className="w-3.5 h-3.5" />
@@ -290,13 +290,13 @@ export default function RedemptionProductsManager({
 
           {/* Buscador */}
           <div className="relative">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-[#f5efe6]/40 absolute left-3 top-2.5" />
             <input
               type="text"
               placeholder="Buscar por SKU o nombre..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 text-xs focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none bg-white"
+              className="w-full pl-9 pr-4 py-2 rounded-lg border border-[#c6a96b]/20 text-xs text-[#f5efe6] focus:ring-2 focus:ring-[#c6a96b] focus:border-transparent outline-none bg-[#2a1a18] placeholder:text-[#f5efe6]/30"
             />
           </div>
 
@@ -304,24 +304,24 @@ export default function RedemptionProductsManager({
           <div className="flex gap-2 text-xs">
             <button
               onClick={() => setFilterStatus("all")}
-              className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
-                filterStatus === "all" ? "bg-gray-900 text-white" : "bg-gray-200/80 text-gray-600 hover:bg-gray-300"
+              className={`px-2.5 py-1 rounded-md font-medium transition-colors border ${
+                filterStatus === "all" ? "bg-[#c6a96b] text-[#1a0e0d] border-[#c6a96b]" : "bg-[#1a0e0d] text-[#f5efe6]/70 border-[#c6a96b]/30 hover:border-[#c6a96b]/60"
               }`}
             >
               Todos
             </button>
             <button
               onClick={() => setFilterStatus("active")}
-              className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
-                filterStatus === "active" ? "bg-green-600 text-white" : "bg-gray-200/80 text-gray-600 hover:bg-gray-300"
+              className={`px-2.5 py-1 rounded-md font-medium transition-colors border ${
+                filterStatus === "active" ? "bg-green-600/20 text-green-400 border-green-500/50" : "bg-[#1a0e0d] text-[#f5efe6]/70 border-[#c6a96b]/30 hover:border-[#c6a96b]/60"
               }`}
             >
               Activos
             </button>
             <button
               onClick={() => setFilterStatus("inactive")}
-              className={`px-2.5 py-1 rounded-md font-medium transition-colors ${
-                filterStatus === "inactive" ? "bg-gray-600 text-white" : "bg-gray-200/80 text-gray-600 hover:bg-gray-300"
+              className={`px-2.5 py-1 rounded-md font-medium transition-colors border ${
+                filterStatus === "inactive" ? "bg-red-600/20 text-red-400 border-red-500/50" : "bg-[#1a0e0d] text-[#f5efe6]/70 border-[#c6a96b]/30 hover:border-[#c6a96b]/60"
               }`}
             >
               Pausados
@@ -330,9 +330,9 @@ export default function RedemptionProductsManager({
         </div>
 
         {/* Lista con scroll */}
-        <div className="flex-1 overflow-y-auto divide-y divide-gray-100 p-2 space-y-1">
+        <div className="flex-1 overflow-y-auto divide-y divide-[#c6a96b]/10 p-2 space-y-1">
           {filteredProducts.length === 0 ? (
-            <div className="p-8 text-center text-gray-400 text-xs">
+            <div className="p-8 text-center text-[#f5efe6]/40 text-xs">
               No se encontraron productos en el catálogo.
             </div>
           ) : (
@@ -346,8 +346,8 @@ export default function RedemptionProductsManager({
                   onClick={() => handleSelectProduct(product)}
                   className={`p-3.5 rounded-xl cursor-pointer transition-all border text-left ${
                     isSelected
-                      ? "bg-blue-50/80 border-blue-300 shadow-sm"
-                      : "bg-white hover:bg-gray-50 border-transparent"
+                      ? "bg-[#c6a96b]/10 border-[#c6a96b] shadow-sm"
+                      : "bg-[#1a0e0d] hover:bg-[#c6a96b]/5 border-transparent"
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -423,13 +423,13 @@ export default function RedemptionProductsManager({
       {/* ─────────────────────────────────────────────────────────────
           COLUMNA DETAIL (Derecha): Formulario y Previsualización (7 cols)
       ───────────────────────────────────────────────────────────── */}
-      <div className="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-        <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-6">
+      <div className="lg:col-span-7 bg-[#2a1a18] rounded-2xl shadow-xl border border-[#c6a96b]/20 p-6 sm:p-8">
+        <div className="flex items-center justify-between pb-4 border-b border-[#c6a96b]/10 mb-6">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-blue-600">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#c6a96b]">
               {isCreatingNew ? "Nuevo Producto de Canje" : "Detalle y Edición"}
             </span>
-            <h2 className="text-2xl font-bold text-gray-900 mt-1">
+            <h2 className="text-2xl font-bold text-[#f5efe6] mt-1 font-serif">
               {isCreatingNew ? "Alta de Recompensa" : formData.title || "Sin título"}
             </h2>
           </div>
@@ -438,10 +438,10 @@ export default function RedemptionProductsManager({
             <button
               type="button"
               onClick={() => handleToggleStatus(formData.id!, formData.is_active)}
-              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors border ${
                 formData.is_active
-                  ? "bg-red-50 text-red-700 hover:bg-red-100 border border-red-200"
-                  : "bg-green-50 text-green-700 hover:bg-green-100 border border-green-200"
+                  ? "bg-red-900/30 text-red-400 hover:bg-red-900/50 border-red-800/50"
+                  : "bg-green-900/30 text-green-400 hover:bg-green-900/50 border-green-800/50"
               }`}
             >
               <Power className="w-3.5 h-3.5" />
@@ -470,9 +470,9 @@ export default function RedemptionProductsManager({
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Previsualización y Carga de Imagen */}
-          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="bg-[#1a0e0d] border border-[#c6a96b]/10 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             {/* Contenedor de Vista Previa con botón para remover */}
-            <div className="relative w-28 h-28 rounded-xl bg-white border border-gray-300 flex items-center justify-center overflow-hidden shrink-0 shadow-inner group">
+            <div className="relative w-28 h-28 rounded-xl bg-[#2a1a18] border border-[#c6a96b]/30 flex items-center justify-center overflow-hidden shrink-0 shadow-inner group">
               {formData.image_url ? (
                 <>
                   <img
@@ -487,14 +487,14 @@ export default function RedemptionProductsManager({
                     type="button"
                     onClick={() => setFormData({ ...formData, image_url: "" })}
                     title="Eliminar imagen"
-                    className="absolute top-1 right-1 p-1 bg-red-600 text-white rounded-full opacity-80 hover:opacity-100 transition-opacity shadow-sm"
+                    className="absolute top-1 right-1 p-1 bg-red-600/80 text-white rounded-full hover:bg-red-500 transition-colors shadow-sm"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </>
               ) : (
-                <div className="flex flex-col items-center justify-center text-gray-400 gap-1 p-2 text-center">
-                  <ImageIcon className="w-8 h-8 text-gray-300" />
+                <div className="flex flex-col items-center justify-center text-[#f5efe6]/40 gap-1 p-2 text-center">
+                  <ImageIcon className="w-8 h-8 text-[#c6a96b]/30" />
                   <span className="text-[10px] leading-tight">Sin imagen</span>
                 </div>
               )}
@@ -503,13 +503,13 @@ export default function RedemptionProductsManager({
             <div className="flex-1 w-full space-y-3">
               {/* Botón Principal: Cargar desde Computadora Local */}
               <div>
-                <label className="block text-xs font-semibold text-gray-800 mb-1">
-                  Cargar foto desde cualquier carpeta de tu computadora
+                <label className="block text-xs font-semibold text-[#f5efe6]/80 mb-1">
+                  Cargar foto local
                 </label>
                 <div className="flex flex-wrap items-center gap-2">
-                  <label className="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-all hover:shadow active:scale-95">
+                  <label className="cursor-pointer inline-flex items-center gap-2 px-3.5 py-2 bg-[#2a1a18] border border-[#c6a96b]/40 hover:bg-[#c6a96b]/10 text-[#c6a96b] rounded-lg text-xs font-semibold transition-all">
                     <Upload className="w-4 h-4" />
-                    <span>Seleccionar imagen local...</span>
+                    <span>Seleccionar imagen...</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -517,15 +517,15 @@ export default function RedemptionProductsManager({
                       className="hidden"
                     />
                   </label>
-                  <span className="text-[11px] text-gray-500">
-                    Soporta JPG, PNG, WEBP, GIF (cualquier directorio)
+                  <span className="text-[11px] text-[#f5efe6]/40">
+                    Soporta JPG, PNG, WEBP (hasta 5MB)
                   </span>
                 </div>
               </div>
 
               {/* Opción Manual: URL o Ruta */}
               <div>
-                <label htmlFor="image_url" className="block text-[11px] font-medium text-gray-600 mb-1">
+                <label htmlFor="image_url" className="block text-[11px] font-medium text-[#f5efe6]/50 mb-1">
                   O introduce una URL / Ruta web manual:
                 </label>
                 <input
@@ -541,13 +541,13 @@ export default function RedemptionProductsManager({
                     }
                     setFormData({ ...formData, image_url: val });
                   }}
-                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none bg-white font-mono"
+                  className="w-full px-3 py-1.5 text-xs rounded-lg border border-[#c6a96b]/30 focus:ring-2 focus:ring-[#c6a96b] focus:border-transparent outline-none bg-[#2a1a18] text-[#f5efe6] font-mono placeholder:text-[#f5efe6]/30"
                 />
               </div>
 
               {/* Selector Rápido de Fotos Predeterminadas */}
               <div>
-                <span className="text-[11px] font-semibold text-gray-500 block mb-1">
+                <span className="text-[11px] font-semibold text-[#f5efe6]/50 block mb-1">
                   Galería predeterminada:
                 </span>
                 <div className="flex flex-wrap gap-1.5">
@@ -564,8 +564,8 @@ export default function RedemptionProductsManager({
                       onClick={() => setFormData({ ...formData, image_url: imgItem.path })}
                       className={`text-[11px] px-2.5 py-1 rounded-md border font-medium transition-all ${
                         formData.image_url === imgItem.path
-                          ? "bg-blue-600 text-white border-blue-600 shadow-sm"
-                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100 hover:border-gray-300"
+                          ? "bg-[#c6a96b] text-[#1a0e0d] border-[#c6a96b] shadow-sm"
+                          : "bg-[#2a1a18] text-[#f5efe6]/70 border-[#c6a96b]/30 hover:border-[#c6a96b]/60"
                       }`}
                     >
                       {imgItem.label}
@@ -579,7 +579,7 @@ export default function RedemptionProductsManager({
           {/* Fila 1: SKU y Título */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label htmlFor="sku" className="block text-xs font-bold text-gray-700 uppercase mb-1">
+              <label htmlFor="sku" className="block text-xs font-bold text-[#f5efe6]/70 uppercase mb-1">
                 Código SKU
               </label>
               <input
@@ -588,13 +588,13 @@ export default function RedemptionProductsManager({
                 placeholder="Ej. ALF-TRIP-01"
                 value={formData.sku}
                 onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                className="w-full px-3.5 py-2.5 text-sm font-mono rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                className="w-full px-3.5 py-2.5 text-sm font-mono rounded-lg border border-[#c6a96b]/30 bg-[#1a0e0d] text-[#f5efe6] focus:ring-2 focus:ring-[#c6a96b] focus:border-transparent outline-none placeholder:text-[#f5efe6]/30"
               />
             </div>
 
             <div className="sm:col-span-2">
-              <label htmlFor="title" className="block text-xs font-bold text-gray-700 uppercase mb-1">
-                Título del Producto / Recompensa <span className="text-red-500">*</span>
+              <label htmlFor="title" className="block text-xs font-bold text-[#f5efe6]/70 uppercase mb-1">
+                Título del Producto / Recompensa <span className="text-[#c6a96b]">*</span>
               </label>
               <input
                 id="title"
@@ -603,14 +603,14 @@ export default function RedemptionProductsManager({
                 placeholder="Ej. Caja x 6 Alfajores Artesanales"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#c6a96b]/30 bg-[#1a0e0d] text-[#f5efe6] focus:ring-2 focus:ring-[#c6a96b] focus:border-transparent outline-none placeholder:text-[#f5efe6]/30"
               />
             </div>
           </div>
 
           {/* Descripción */}
           <div>
-            <label htmlFor="description" className="block text-xs font-bold text-gray-700 uppercase mb-1">
+            <label htmlFor="description" className="block text-xs font-bold text-[#f5efe6]/70 uppercase mb-1">
               Descripción del Canje
             </label>
             <textarea
@@ -619,16 +619,16 @@ export default function RedemptionProductsManager({
               placeholder="Detalla qué incluye el premio o sabores disponibles..."
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-3.5 py-2 text-sm rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+              className="w-full px-3.5 py-2 text-sm rounded-lg border border-[#c6a96b]/30 bg-[#1a0e0d] text-[#f5efe6] focus:ring-2 focus:ring-[#c6a96b] focus:border-transparent outline-none placeholder:text-[#f5efe6]/30"
             />
           </div>
 
           {/* Fila 2: Puntos, $ Dinero Adicional y Fecha de Caducidad */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-[#1a0e0d] p-4 rounded-xl border border-[#c6a96b]/20">
             <div>
-              <label htmlFor="points_required" className="block text-xs font-bold text-blue-950 uppercase mb-1 flex items-center gap-1">
-                <Award className="w-3.5 h-3.5 text-blue-600" />
-                Puntos Requeridos <span className="text-red-500">*</span>
+              <label htmlFor="points_required" className="block text-xs font-bold text-[#c6a96b] uppercase mb-1 flex items-center gap-1">
+                <Award className="w-3.5 h-3.5" />
+                Puntos Requeridos <span className="text-[#c6a96b]">*</span>
               </label>
               <input
                 id="points_required"
@@ -639,13 +639,13 @@ export default function RedemptionProductsManager({
                 onChange={(e) =>
                   setFormData({ ...formData, points_required: parseInt(e.target.value, 10) || 0 })
                 }
-                className="w-full px-3.5 py-2 text-sm font-bold text-blue-900 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none bg-white"
+                className="w-full px-3.5 py-2 text-sm font-bold text-[#f5efe6] rounded-lg border border-[#c6a96b]/30 bg-[#2a1a18] focus:ring-2 focus:ring-[#c6a96b] outline-none"
               />
             </div>
 
             <div>
-              <label htmlFor="additional_money" className="block text-xs font-bold text-blue-950 uppercase mb-1 flex items-center gap-1">
-                <DollarSign className="w-3.5 h-3.5 text-amber-600" />
+              <label htmlFor="additional_money" className="block text-xs font-bold text-[#c6a96b]/80 uppercase mb-1 flex items-center gap-1">
+                <DollarSign className="w-3.5 h-3.5 text-[#c6a96b]" />
                 $ Dinero Adicional
               </label>
               <input
@@ -658,24 +658,24 @@ export default function RedemptionProductsManager({
                 onChange={(e) =>
                   setFormData({ ...formData, additional_money: parseFloat(e.target.value) || 0 })
                 }
-                className="w-full px-3.5 py-2 text-sm font-bold text-gray-900 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-600 outline-none bg-white"
+                className="w-full px-3.5 py-2 text-sm font-bold text-[#f5efe6] rounded-lg border border-[#c6a96b]/30 bg-[#2a1a18] focus:ring-2 focus:ring-[#c6a96b] outline-none"
               />
-              <span className="text-[10px] text-gray-500 mt-1 block">
+              <span className="text-[10px] text-[#f5efe6]/40 mt-1 block">
                 Coloca 0 si el canje es 100% en puntos.
               </span>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label htmlFor="expires_at" className="block text-xs font-bold text-blue-950 uppercase flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5 text-gray-600" />
+                <label htmlFor="expires_at" className="block text-xs font-bold text-[#f5efe6]/70 uppercase flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-[#c6a96b]" />
                   Fecha de Caducidad
                 </label>
                 {formData.expires_at && (
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, expires_at: "" })}
-                    className="text-[10px] text-blue-700 hover:underline font-semibold"
+                    className="text-[10px] text-[#c6a96b] hover:underline font-semibold"
                   >
                     Hacer permanente
                   </button>
@@ -686,24 +686,24 @@ export default function RedemptionProductsManager({
                 type="date"
                 value={formData.expires_at}
                 onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
-                className={`w-full px-3.5 py-2 text-sm rounded-lg border focus:ring-2 focus:ring-blue-600 outline-none bg-white text-gray-700 ${
+                className={`w-full px-3.5 py-2 text-sm rounded-lg border focus:ring-2 focus:ring-[#c6a96b] outline-none bg-[#2a1a18] text-[#f5efe6] ${
                   formData.expires_at && new Date(formData.expires_at + "T23:59:59") < new Date()
-                    ? "border-amber-400 bg-amber-50/50"
-                    : "border-gray-300"
+                    ? "border-amber-500/50 bg-amber-900/20"
+                    : "border-[#c6a96b]/30"
                 }`}
               />
               {formData.expires_at ? (
                 new Date(formData.expires_at + "T23:59:59") < new Date() ? (
-                  <span className="text-[10px] text-amber-700 font-semibold mt-1 flex items-center gap-1">
+                  <span className="text-[10px] text-amber-500 font-semibold mt-1 flex items-center gap-1">
                     ⚠️ Fecha pasada: se mostrará como expirado.
                   </span>
                 ) : (
-                  <span className="text-[10px] text-green-700 font-medium mt-1 block">
+                  <span className="text-[10px] text-green-400 font-medium mt-1 block">
                     Válido hasta el {new Date(formData.expires_at + "T12:00:00").toLocaleDateString("es-AR")}.
                   </span>
                 )
               ) : (
-                <span className="text-[10px] text-gray-500 mt-1 block">
+                <span className="text-[10px] text-[#f5efe6]/40 mt-1 block">
                   Promoción permanente (sin fecha límite).
                 </span>
               )}
@@ -711,8 +711,8 @@ export default function RedemptionProductsManager({
           </div>
 
           {/* Resumen del Valor del Canje y Categoría */}
-          <div className="bg-gray-100 p-4 rounded-xl flex items-center justify-between text-xs">
-            <span className="text-gray-600 font-medium">Esquema para el cliente:</span>
+          <div className="bg-[#1a0e0d] border border-[#c6a96b]/20 p-4 rounded-xl flex items-center justify-between text-xs">
+            <span className="text-[#f5efe6]/70 font-medium">Esquema para el cliente:</span>
             <div className="flex items-center gap-3">
               {(() => {
                 const cat = getCategoryForPoints(formData.points_required);
@@ -725,11 +725,11 @@ export default function RedemptionProductsManager({
                 );
               })()}
               <div className="flex items-center gap-1">
-                <span className="font-extrabold text-sm text-blue-900">
+                <span className="font-extrabold text-sm text-[#c6a96b]">
                   {formData.points_required} pts
                 </span>
                 {formData.additional_money > 0 && (
-                  <span className="font-extrabold text-sm text-amber-800">
+                  <span className="font-extrabold text-sm text-[#f5efe6]">
                     + ${Number(formData.additional_money).toLocaleString("es-AR")}
                   </span>
                 )}
@@ -738,12 +738,12 @@ export default function RedemptionProductsManager({
           </div>
 
           {/* Botones de acción */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#c6a96b]/10">
             {isCreatingNew && initialProducts.length > 0 && (
               <button
                 type="button"
                 onClick={() => handleSelectProduct(initialProducts[0])}
-                className="px-4 py-2.5 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm font-medium transition-colors"
+                className="px-4 py-2.5 rounded-lg border border-[#c6a96b]/30 text-[#f5efe6]/70 hover:bg-[#c6a96b]/10 text-sm font-medium transition-colors"
               >
                 Cancelar
               </button>
@@ -752,7 +752,7 @@ export default function RedemptionProductsManager({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-lg text-sm transition-all shadow-md active:scale-95 disabled:opacity-50"
+              className="inline-flex items-center gap-2 bg-[#c6a96b] hover:bg-[#d8bd80] text-[#1a0e0d] font-bold px-6 py-2.5 rounded-lg text-sm transition-all shadow-md active:scale-95 disabled:opacity-50"
             >
               <Sparkles className="w-4 h-4" />
               {isSubmitting ? "Guardando..." : isCreatingNew ? "Crear Producto" : "Guardar Cambios"}

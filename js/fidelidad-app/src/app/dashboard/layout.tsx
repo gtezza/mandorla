@@ -14,18 +14,18 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen bg-gray-50 font-sans text-gray-900">
+    <div className="flex h-screen bg-[#1a0e0d] font-sans text-[#f5efe6] selection:bg-[#c6a96b] selection:text-[#1a0e0d]">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
-        <div className="h-16 flex items-center px-6 border-b border-gray-100">
-          <span className="text-xl font-bold text-blue-900">CRM Mandorla</span>
+      <aside className="w-64 bg-[#2a1a18] border-r border-[#c6a96b]/20 flex flex-col shadow-2xl z-10">
+        <div className="h-16 flex items-center px-6 border-b border-[#c6a96b]/10">
+          <span className="text-xl font-bold text-[#c6a96b] font-serif tracking-widest">MANDORLA</span>
         </div>
         
         <Sidebar />
 
-        <div className="p-4 border-t border-gray-100">
+        <div className="p-4 border-t border-[#c6a96b]/10">
           <form action="/auth/signout" method="post">
-            <button className="flex w-full items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-red-600 hover:bg-red-50 transition-colors">
+            <button className="flex w-full items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-red-400 hover:bg-red-500/10 transition-colors">
               <LogOut className="w-5 h-5" />
               Cerrar Sesión
             </button>

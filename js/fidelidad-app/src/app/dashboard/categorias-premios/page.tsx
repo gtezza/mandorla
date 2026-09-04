@@ -51,8 +51,8 @@ export default async function RewardCategoriesPage() {
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Categorías de Premios</h1>
-          <p className="text-gray-500 mt-2">
+          <h1 className="text-3xl font-bold text-[#c6a96b] font-serif tracking-wide">Categorías de Premios</h1>
+          <p className="text-[#f5efe6]/70 mt-2">
             Gestiona los niveles para agrupar automáticamente los premios según sus puntos requeridos.
           </p>
         </div>
